@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AuctionHouseX">
+    <output-path>D:/Coding/Plugin Entwicklung/TestServer latest Spigot/plugins</output-path>
+    <root id="archive" name="AuctionHouseX.jar">
+      <element id="module-output" name="AuctionHouseX" />
+    </root>
+  </artifact>
+</component>
