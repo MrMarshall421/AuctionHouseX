@@ -1,6 +1,7 @@
 package dev.mrmarshall.auctionhousex.plugin;
 
 import dev.mrmarshall.auctionhousex.AuctionHouseX;
+import dev.mrmarshall.auctionhousex.commands.AuctionHouseCMD;
 import dev.mrmarshall.auctionhousex.commands.XpBottleCMD;
 import dev.mrmarshall.auctionhousex.events.*;
 import dev.mrmarshall.auctionhousex.gui.TradingGUI;
@@ -29,6 +30,8 @@ public class PluginManager {
 	private void loadCommands() {
 		XpBottleCMD cXpBottleCMD = new XpBottleCMD();
 		AuctionHouseX.getInstance().getCommand("xpbottle").setExecutor(cXpBottleCMD);
+		AuctionHouseCMD cAuctionHouseCMD = new AuctionHouseCMD();
+		AuctionHouseX.getInstance().getCommand("auctionhouse").setExecutor(cAuctionHouseCMD);
 	}
 
 	public PluginManager() {

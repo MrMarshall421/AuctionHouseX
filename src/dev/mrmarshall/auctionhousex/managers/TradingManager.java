@@ -22,10 +22,12 @@ public class TradingManager {
 	private Map<UUID, UUID> trading;
 	private Map<UUID, Inventory> inventoryCache;
 
-	private File instruction = new File("plugins/AuctionHouseX/SafeTrade/instruction.yml");
-	private FileConfiguration instructionCfg = YamlConfiguration.loadConfiguration(instruction);
+	private File instruction;
+	private FileConfiguration instructionCfg;
 
 	public TradingManager() {
+		instruction = new File("plugins/AuctionHouseX/SafeTrade/instruction.yml");
+		instructionCfg = YamlConfiguration.loadConfiguration(instruction);
 		loadTradingFiles();
 
 		inventoryCache = new HashMap<>();
@@ -57,19 +59,7 @@ public class TradingManager {
 	}
 
 	public ItemStack getInstructionBook() {
-		ItemStack instructionBook = new ItemStack(Material.BOOK);
-		ItemMeta instructionBookMeta = instructionBook.getItemMeta();
-		instructionBookMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', instructionCfg.getString("item.name")));
-
-		//> Colorized Lore
-		List<String> lore = new ArrayList<>();
-		for(String key : instructionCfg.getStringList("item.lore")) {
-			lore.add(ChatColor.translateAlternateColorCodes('&', key));
-		}
-
-		instructionBookMeta.setLore(lore);
-		instructionBook.setItemMeta(instructionBookMeta);
-		return instructionBook;
+		return AuctionHouseX.getInstance().getFileManager().getInstructionBook(instruction, instructionCfg);
 	}
 
 	public void acceptTrade(UUID targetUUID) {

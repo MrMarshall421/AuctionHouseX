@@ -9,3 +9,6 @@ main: dev.mrmarshall.auctionhousex.AuctionHouseX
 commands:
   xpbottle:
     description: Converts player EXP to a physical item
+  auctionhouse:
+    aliases: [ah]
+    description: Opens the Auctionhouse
