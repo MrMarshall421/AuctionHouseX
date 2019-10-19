@@ -4,6 +4,8 @@ import dev.mrmarshall.auctionhousex.AuctionHouseX;
 import dev.mrmarshall.auctionhousex.commands.AuctionHouseCMD;
 import dev.mrmarshall.auctionhousex.commands.XpBottleCMD;
 import dev.mrmarshall.auctionhousex.events.*;
+import dev.mrmarshall.auctionhousex.gui.AuctionhouseGUI;
+import dev.mrmarshall.auctionhousex.gui.ListingPriceConfirmationGUI;
 import dev.mrmarshall.auctionhousex.gui.TradingGUI;
 import org.bukkit.Bukkit;
 
@@ -25,6 +27,8 @@ public class PluginManager {
 
 		//> GUIs
 		Bukkit.getPluginManager().registerEvents(new TradingGUI(), AuctionHouseX.getInstance());
+		Bukkit.getPluginManager().registerEvents(new ListingPriceConfirmationGUI(), AuctionHouseX.getInstance());
+		Bukkit.getPluginManager().registerEvents(new AuctionhouseGUI(), AuctionHouseX.getInstance());
 	}
 
 	private void loadCommands() {

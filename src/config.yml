@@ -14,16 +14,12 @@ auction:
   salesTax: "0%"
   allowDamagedItems: false
   defaultMaxListings: 45
-# Available sorting orders: oldest | newest | cheapest
+  # Available sorting orders: oldest | newest
   sortOrder: 'oldest'
   announce: true
 blacklist:
-  '0':
-    item: minecraft:bedrock
-  '1':
-    item: minecraft:barrier
-  '2':
-    item: minecraft:command_block
-  '3':
-    item: minecraft:structure_block
+  - "bedrock"
+  - "barrier"
+  - "command_block"
+  - "structure_block"
 disabled-worlds: []

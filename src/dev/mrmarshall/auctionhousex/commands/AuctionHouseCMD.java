@@ -3,6 +3,8 @@ package dev.mrmarshall.auctionhousex.commands;
 import dev.mrmarshall.auctionhousex.AuctionHouseX;
 import dev.mrmarshall.auctionhousex.gui.AuctionhouseGUI;
 import dev.mrmarshall.auctionhousex.gui.ListingPriceConfirmationGUI;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,9 +26,17 @@ public class AuctionHouseCMD implements CommandExecutor {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
 
+			//> Prevent Spectator & Creative from using /ah
+			if (AuctionHouseX.getInstance().getConfig().getBoolean("auction.preventCreative") && p.getGameMode() == GameMode.CREATIVE) {
+				return false;
+			}
+			if (AuctionHouseX.getInstance().getConfig().getBoolean("auction.preventSpectator") && p.getGameMode() == GameMode.SPECTATOR) {
+				return false;
+			}
+
 			if(args.length == 0) {
 				//> Open Auctionhouse
-
+				auctionhouseGUI.open(p);
 			} else if(args.length == 1) {
 				if (args[0].equalsIgnoreCase("reload")) {
 					//> Reload Command
@@ -71,6 +81,9 @@ public class AuctionHouseCMD implements CommandExecutor {
 					//> Sells item in hand
 					try {
 						double price = Float.valueOf(args[1]);
+						double listingPriceFinal = 0.0;
+						double listingPrice = AuctionHouseX.getInstance().getConfig().getDouble("auction.listingPrice");
+						double listingRate = AuctionHouseX.getInstance().getConfig().getDouble("auction.listingRate");
 
 						boolean damaged = false;
 						if(p.getInventory().getItemInMainHand().getItemMeta() instanceof Damageable) {
@@ -87,18 +100,17 @@ public class AuctionHouseCMD implements CommandExecutor {
 							if(price <= AuctionHouseX.getInstance().getConfig().getDouble("auction.maxSellPrice")) {
 								if(AuctionHouseX.getInstance().getConfig().getDouble("auction.listingPrice") != 0 || AuctionHouseX.getInstance().getConfig().getDouble("auction.listingRate") != 0) {
 									//> Open Confirmation GUI for listing price
-									double listingPriceFinal = 0.0;
-									double listingPrice = AuctionHouseX.getInstance().getConfig().getDouble("auction.listingPrice");
-									double listingRate = AuctionHouseX.getInstance().getConfig().getDouble("auction.listingRate");
-
 									if(listingPrice != 0.0) { listingPriceFinal += listingPrice; }
 									if(listingRate != 0.0) { listingPriceFinal = (price / 100 * listingRate) + listingPriceFinal; }
 
-									AuctionHouseX.getInstance().getAuctionhouseManager().getConfirmListingPrice().put(p.getUniqueId(), p.getInventory().getItemInMainHand());
-									listingPriceConfirmationGUI.open(p, listingPriceFinal);
+									if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= listingPriceFinal) {
+										listingPriceConfirmationGUI.open(p, p.getInventory().getItemInMainHand(), listingPriceFinal);
+									} else {
+										p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou have not enough money to pay the listing fee!");
+									}
 								} else {
-									//> Skip listing price Confirmation GUI
-
+									//> Sell item & skip Confirmation GUI
+									AuctionHouseX.getInstance().getAuctionhouseManager().sellItem(p, p.getInventory().getItemInMainHand(), listingPriceFinal);
 								}
 							} else {
 								p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou can't sell for more than " + AuctionHouseX.getInstance().getConfig().getDouble("auction.maxSellPrice") + "$");
@@ -118,7 +130,8 @@ public class AuctionHouseCMD implements CommandExecutor {
 				sendHelp(p, 1);
 			}
  		}
-		return false;
+
+		return true;
 	}
 
 	private void sendHelp(Player p, int page) {
