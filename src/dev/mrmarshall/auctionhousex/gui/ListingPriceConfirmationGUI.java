@@ -42,17 +42,16 @@ public class ListingPriceConfirmationGUI implements Listener {
 
 		if (e.getView().getTitle().contains(" Listing Fee?")) {
 			try {
-				double listingFee = Integer.parseInt(e.getView().getTitle().replaceAll("Pay $", "").replaceAll(" Listing Fee?", ""));
+				double listingFee = Double.parseDouble(e.getView().getTitle().replaceAll("[^\\d.]", ""));
 				e.setCancelled(true);
 
 				if (e.getCurrentItem().getItemMeta().getDisplayName().equals("§aConfirm")) {
 					//> Sell item at slot 4
-					AuctionHouseX.getInstance().getAuctionhouseManager().sellItem(p, p.getOpenInventory().getTopInventory().getItem(4), listingFee);
-					AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), listingFee);
-
+					AuctionHouseX.getInstance().getAuctionhouseManager().sellItem(p, p.getOpenInventory().getTopInventory().getItem(4), AuctionHouseX.getInstance().getAuctionhouseManager().getSelling().get(p.getUniqueId()), listingFee);
+					AuctionHouseX.getInstance().getAuctionhouseManager().getSelling().remove(p.getUniqueId());
 					p.closeInventory();
-					p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§fA fee of §c$" + listingFee + " §fwas charged");
 				} else if (e.getCurrentItem().getItemMeta().getDisplayName().equals("§cCancel")) {
+					AuctionHouseX.getInstance().getAuctionhouseManager().getSelling().remove(p.getUniqueId());
 					p.closeInventory();
 					p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou have cancelled the selling");
 				}

@@ -2,14 +2,12 @@ package dev.mrmarshall.auctionhousex.managers;
 
 import dev.mrmarshall.auctionhousex.AuctionHouseX;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -59,7 +57,7 @@ public class TradingManager {
 	}
 
 	public ItemStack getInstructionBook() {
-		return AuctionHouseX.getInstance().getFileManager().getInstructionBook(instruction, instructionCfg);
+		return AuctionHouseX.getInstance().getFileManager().getInstructionBook(instructionCfg);
 	}
 
 	public void acceptTrade(UUID targetUUID) {

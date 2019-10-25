@@ -1,7 +1,7 @@
 name: AuctionHouseX
 version: 1.0.0
 api-version: 1.13
-softdepend: [Vault]
+depend: [Vault]
 author: MrMarshall
 website: https://mrmarshall.dev/
 main: dev.mrmarshall.auctionhousex.AuctionHouseX

@@ -1,7 +1,6 @@
 package dev.mrmarshall.auctionhousex.commands;
 
 import dev.mrmarshall.auctionhousex.AuctionHouseX;
-import dev.mrmarshall.auctionhousex.gui.AuctionhouseGUI;
 import dev.mrmarshall.auctionhousex.gui.ListingPriceConfirmationGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -11,14 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class AuctionHouseCMD implements CommandExecutor {
 
 	ListingPriceConfirmationGUI listingPriceConfirmationGUI;
-	AuctionhouseGUI auctionhouseGUI;
 
 	public AuctionHouseCMD() {
 		listingPriceConfirmationGUI = new ListingPriceConfirmationGUI();
-		auctionhouseGUI = new AuctionhouseGUI();
 	}
 
 	@Override
@@ -34,15 +33,24 @@ public class AuctionHouseCMD implements CommandExecutor {
 				return false;
 			}
 
+			//> Prevent using Commands in disabled worlds
+			List<String> disabledWorlds = AuctionHouseX.getInstance().getConfig().getStringList("disabled-worlds");
+			for (String world : disabledWorlds) {
+				if (p.getWorld().getName() == world) {
+					return false;
+				}
+			}
+
 			if(args.length == 0) {
 				//> Open Auctionhouse
-				auctionhouseGUI.open(p);
+				AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "Blocks", 1, "oldest");
 			} else if(args.length == 1) {
 				if (args[0].equalsIgnoreCase("reload")) {
 					//> Reload Command
 					if(p.hasPermission("auctionhouse.reload")) {
 						AuctionHouseX.getInstance().getPluginLoader().disablePlugin(AuctionHouseX.getInstance());
 						AuctionHouseX.getInstance().getPluginLoader().enablePlugin(AuctionHouseX.getInstance());
+						AuctionHouseX.getInstance().reloadConfig();
 
 						p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aPlugin reloaded successfully.");
 					} else {
@@ -78,48 +86,57 @@ public class AuctionHouseCMD implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("help") && args[1].equals("2")) {
 					sendHelp(p, 2);
 				} else if(args[0].equalsIgnoreCase("sell")) {
-					//> Sells item in hand
-					try {
-						double price = Float.valueOf(args[1]);
-						double listingPriceFinal = 0.0;
-						double listingPrice = AuctionHouseX.getInstance().getConfig().getDouble("auction.listingPrice");
-						double listingRate = AuctionHouseX.getInstance().getConfig().getDouble("auction.listingRate");
+					if (p.hasPermission("auctionhouse.sell")) {
+						//> Sells item in hand
+						try {
+							double price = Float.valueOf(args[1]);
+							double listingPriceFinal = 0.0;
+							double listingPrice = AuctionHouseX.getInstance().getConfig().getDouble("auction.listingPrice");
+							double listingRate = AuctionHouseX.getInstance().getConfig().getDouble("auction.listingRate");
 
-						boolean damaged = false;
-						if(p.getInventory().getItemInMainHand().getItemMeta() instanceof Damageable) {
-							Damageable damageable = (Damageable) p.getInventory().getItemInMainHand();
+							boolean damaged = false;
+							if (p.getInventory().getItemInMainHand().getItemMeta() instanceof Damageable) {
+								Damageable damageable = (Damageable) p.getInventory().getItemInMainHand();
 
-							if(damageable.getAbsorptionAmount() > 0) {
-								if(!AuctionHouseX.getInstance().getConfig().getBoolean("auction.allowDamagedItems")) {
-									damaged = true;
+								if (damageable.getAbsorptionAmount() > 0) {
+									if (!AuctionHouseX.getInstance().getConfig().getBoolean("auction.allowDamagedItems")) {
+										damaged = true;
+									}
 								}
 							}
-						}
 
-						if(!damaged) {
-							if(price <= AuctionHouseX.getInstance().getConfig().getDouble("auction.maxSellPrice")) {
-								if(AuctionHouseX.getInstance().getConfig().getDouble("auction.listingPrice") != 0 || AuctionHouseX.getInstance().getConfig().getDouble("auction.listingRate") != 0) {
-									//> Open Confirmation GUI for listing price
-									if(listingPrice != 0.0) { listingPriceFinal += listingPrice; }
-									if(listingRate != 0.0) { listingPriceFinal = (price / 100 * listingRate) + listingPriceFinal; }
+							if (!damaged) {
+								if (price <= AuctionHouseX.getInstance().getConfig().getDouble("auction.maxSellPrice")) {
+									if (AuctionHouseX.getInstance().getConfig().getDouble("auction.listingPrice") != 0 || AuctionHouseX.getInstance().getConfig().getDouble("auction.listingRate") != 0) {
+										//> Open Confirmation GUI for listing price
+										if (listingPrice != 0.0) {
+											listingPriceFinal += listingPrice;
+										}
+										if (listingRate != 0.0) {
+											listingPriceFinal = (price / 100 * listingRate) + listingPriceFinal;
+										}
 
-									if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= listingPriceFinal) {
-										listingPriceConfirmationGUI.open(p, p.getInventory().getItemInMainHand(), listingPriceFinal);
+										if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= listingPriceFinal) {
+											AuctionHouseX.getInstance().getAuctionhouseManager().getSelling().put(p.getUniqueId(), price);
+											listingPriceConfirmationGUI.open(p, p.getInventory().getItemInMainHand(), listingPriceFinal);
+										} else {
+											p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou have not enough money to pay the listing fee!");
+										}
 									} else {
-										p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou have not enough money to pay the listing fee!");
+										//> Sell item & skip Confirmation GUI
+										AuctionHouseX.getInstance().getAuctionhouseManager().sellItem(p, p.getInventory().getItemInMainHand(), price, 0);
 									}
 								} else {
-									//> Sell item & skip Confirmation GUI
-									AuctionHouseX.getInstance().getAuctionhouseManager().sellItem(p, p.getInventory().getItemInMainHand(), listingPriceFinal);
+									p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou can't sell for more than " + AuctionHouseX.getInstance().getConfig().getDouble("auction.maxSellPrice") + "$");
 								}
 							} else {
-								p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou can't sell for more than " + AuctionHouseX.getInstance().getConfig().getDouble("auction.maxSellPrice") + "$");
+								p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou can't sell damaged items!");
 							}
-						} else {
-							p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou can't sell damaged items!");
+						} catch (NumberFormatException ex) {
+							p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cThe Price must be a number!");
 						}
-					} catch(NumberFormatException ex)  {
-						p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cThe Price must be a number!");
+					} else {
+						p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
 					}
 				} else {
 					//> Show Help
@@ -131,7 +148,7 @@ public class AuctionHouseCMD implements CommandExecutor {
 			}
  		}
 
-		return true;
+		return false;
 	}
 
 	private void sendHelp(Player p, int page) {

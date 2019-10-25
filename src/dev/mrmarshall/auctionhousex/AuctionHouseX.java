@@ -1,10 +1,13 @@
 package dev.mrmarshall.auctionhousex;
 
+import dev.mrmarshall.auctionhousex.gui.AuctionhouseGUI;
+import dev.mrmarshall.auctionhousex.gui.CurrentListingsGUI;
 import dev.mrmarshall.auctionhousex.items.EnchantingBottle;
 import dev.mrmarshall.auctionhousex.managers.*;
 import dev.mrmarshall.auctionhousex.plugin.PluginManager;
 import dev.mrmarshall.auctionhousex.util.ItemCreator;
 import dev.mrmarshall.auctionhousex.util.Message;
+import dev.mrmarshall.auctionhousex.util.TimeHandler;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -25,23 +28,29 @@ public class AuctionHouseX extends JavaPlugin {
 	private AuctionhouseManager AhM;
 	private FileManager fileManager;
 	private CategoryManager categoryManager;
+	private TimeHandler timeHandler;
+	private AuctionhouseGUI auctionhouseGUI;
+	private CurrentListingsGUI currentListingsGUI;
 
 	@Override
 	public void onEnable() {
 		instance = this;
+		new PluginManager();
+
 		itemCreator = new ItemCreator();
 		message = new Message();
 		enchantingBottle = new EnchantingBottle();
 		levelManager = new LevelManager();
-		AhM = new AuctionhouseManager();
 		fileManager = new FileManager();
+		AhM = new AuctionhouseManager();
 		categoryManager = new CategoryManager();
 		setupChatManager();
 		setupPermissionManager();
 		setupEconomyManager();
-
-		new PluginManager();
 		tradingManager = new TradingManager();
+		timeHandler = new TimeHandler();
+		auctionhouseGUI = new AuctionhouseGUI();
+		currentListingsGUI = new CurrentListingsGUI();
 	}
 
 	public static AuctionHouseX getInstance() { return instance; }
@@ -74,4 +83,16 @@ public class AuctionHouseX extends JavaPlugin {
 	public AuctionhouseManager getAuctionhouseManager() { return AhM; }
 	public FileManager getFileManager() { return fileManager; }
 	public CategoryManager getCategoryManager() { return categoryManager; }
+
+	public TimeHandler getTimeHandler() {
+		return timeHandler;
+	}
+
+	public AuctionhouseGUI getAuctionhouseGUI() {
+		return auctionhouseGUI;
+	}
+
+	public CurrentListingsGUI getCurrentListingsGUI() {
+		return currentListingsGUI;
+	}
 }

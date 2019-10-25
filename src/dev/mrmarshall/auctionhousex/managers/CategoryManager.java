@@ -776,6 +776,7 @@ public class CategoryManager {
 		productiveCategory.add(Material.SKULL_BANNER_PATTERN);
 		productiveCategory.add(Material.MOJANG_BANNER_PATTERN);
 		productiveCategory.add(Material.GLOBE_BANNER_PATTERN);
+		productiveCategory.add(Material.SPAWNER);
 
 		//>->->->->->->->->->->->->->->->->->->->->->->> FOOD CATEGORY
 		foodCategory.add(Material.APPLE);
@@ -895,6 +896,8 @@ public class CategoryManager {
 		brewingCategory.add(Material.SPLASH_POTION);
 		brewingCategory.add(Material.LINGERING_POTION);
 		brewingCategory.add(Material.PHANTOM_MEMBRANE);
+
+		brewingCategory.add(Material.ENCHANTED_BOOK);
 	}
 
 	public List<Material> getBuildingCategory() { return buildingCategory; }

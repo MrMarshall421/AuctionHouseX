@@ -29,5 +29,9 @@ public class InventoryCloseListener implements Listener {
 		} catch(NullPointerException ex) {
 			ex.printStackTrace();
 		}
+
+		AuctionHouseX.getInstance().getAuctionhouseManager().getSelling().remove(p.getUniqueId());
+
+		AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().remove(p.getUniqueId());
 	}
 }
