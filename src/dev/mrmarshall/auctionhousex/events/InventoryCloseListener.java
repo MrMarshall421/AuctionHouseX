@@ -2,10 +2,14 @@ package dev.mrmarshall.auctionhousex.events;
 
 import dev.mrmarshall.auctionhousex.AuctionHouseX;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 
 public class InventoryCloseListener implements Listener {
 
@@ -30,8 +34,21 @@ public class InventoryCloseListener implements Listener {
 			ex.printStackTrace();
 		}
 
-		AuctionHouseX.getInstance().getAuctionhouseManager().getSelling().remove(p.getUniqueId());
+		if (e.getView().getTitle().equals("§rShulker Box") && p.getInventory().getItemInMainHand().getType().toString().contains("_SHULKER_BOX")) {
+			//> Save Shulker Box Contents
+			ItemStack[] shulkerBoxContent = e.getInventory().getContents();
+			ItemStack shulkerBoxItem = p.getInventory().getItemInMainHand().clone();
+			BlockStateMeta shulkerBoxMeta = (BlockStateMeta) shulkerBoxItem.getItemMeta();
+			ShulkerBox shulkerBox = (ShulkerBox) shulkerBoxMeta.getBlockState();
+			shulkerBox.getInventory().setContents(shulkerBoxContent);
+			shulkerBoxMeta.setBlockState(shulkerBox);
+			shulkerBoxItem.setItemMeta(shulkerBoxMeta);
 
+			p.getInventory().setItemInMainHand(shulkerBoxItem);
+			p.playSound(p.getLocation(), Sound.BLOCK_SHULKER_BOX_CLOSE, 1.0F, 1.0F);
+		}
+
+		AuctionHouseX.getInstance().getAuctionhouseManager().getSelling().remove(p.getUniqueId());
 		AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().remove(p.getUniqueId());
 	}
 }

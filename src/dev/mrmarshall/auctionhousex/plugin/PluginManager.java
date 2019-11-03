@@ -25,6 +25,7 @@ public class PluginManager {
 		Bukkit.getPluginManager().registerEvents(new ExpBottleListener(), AuctionHouseX.getInstance());
 		Bukkit.getPluginManager().registerEvents(new ProjectileLaunchListener(), AuctionHouseX.getInstance());
 		Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(), AuctionHouseX.getInstance());
+		Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), AuctionHouseX.getInstance());
 
 		//> GUIs
 		Bukkit.getPluginManager().registerEvents(new TradingGUI(), AuctionHouseX.getInstance());
