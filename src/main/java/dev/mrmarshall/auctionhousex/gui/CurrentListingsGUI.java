@@ -18,10 +18,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CurrentListingsGUI implements Listener {
 
@@ -43,11 +40,17 @@ public class CurrentListingsGUI implements Listener {
         List<String> sortingLore = new ArrayList<>();
         ItemStack sorting;
         if (sortOrder.equals("oldest")) {
-            sortingLore.add("§9Order: §eOldest First");
-            sorting = AuctionHouseX.getInstance().getItemCreator().create(Material.ENDER_EYE, "§6Sort Listings", sortingLore, false);
+            sortingLore.add("§2Currently looking at:");
+            sortingLore.add("§a§lOldest first");
+            sorting = AuctionHouseX.getInstance().getItemCreator().create(Material.ENDER_EYE, "§6Sorting Order", sortingLore, false);
+        } else if (sortOrder.equals("newest")) {
+            sortingLore.add("§2Currently looking at:");
+            sortingLore.add("§a§lNewest first");
+            sorting = AuctionHouseX.getInstance().getItemCreator().create(Material.ENDER_PEARL, "§6Sorting Order", sortingLore, false);
         } else {
-            sortingLore.add("§9Order: §eNewest First");
-            sorting = AuctionHouseX.getInstance().getItemCreator().create(Material.ENDER_PEARL, "§6Sort Listings", sortingLore, false);
+            sortingLore.add("§2Currently looking at:");
+            sortingLore.add("§a§lCheapest first");
+            sorting = AuctionHouseX.getInstance().getItemCreator().create(Material.GLOWSTONE_DUST, "§6Sorting Order", sortingLore, false);
         }
         ItemStack recentlySold = AuctionHouseX.getInstance().getItemCreator().create(Material.EMERALD, "§6Recently Sold Items", new ArrayList<>(), false);
         ItemStack expiredCancelled = AuctionHouseX.getInstance().getItemCreator().create(Material.POISONOUS_POTATO, "§6Expired/Cancelled Listings", new ArrayList<>(), false);
@@ -106,6 +109,9 @@ public class CurrentListingsGUI implements Listener {
                 if (currentSortingOrder.equals("oldest")) {
                     //> Change to newest
                     open(p, "newest", currentPage);
+                } else if (currentSortingOrder.equals("newest")) {
+                    //> Change to cheapest
+                    open(p, "cheapest", currentPage);
                 } else {
                     //> Change to oldest
                     open(p, "oldest", currentPage);
@@ -184,7 +190,7 @@ public class CurrentListingsGUI implements Listener {
                                 }
                             }
                         }
-                    } else {
+                    } else if (currentSortingOrder.equals("newest")) {
                         Iterator filesIterator = listingsMap.entrySet().iterator();
                         while (filesIterator.hasNext()) {
                             Map.Entry entry = (Map.Entry) filesIterator.next();
@@ -229,6 +235,76 @@ public class CurrentListingsGUI implements Listener {
                                             } else {
                                                 //> Cancel item
                                                 AuctionHouseX.getInstance().getAuctionhouseManager().cancelListing(categoryFile, categoryFileCfg, listings.get(i));
+                                                itemSlot--;
+                                            }
+                                        } else {
+                                            //> Item expired
+                                            itemSlot--;
+                                        }
+                                    }
+
+                                    if (itemSlot <= 52) {
+                                        itemSlot++;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Iterator filesIterator = listingsMap.entrySet().iterator();
+                        while (filesIterator.hasNext()) {
+                            Map.Entry entry = (Map.Entry) filesIterator.next();
+                            List<Integer> listings = (List<Integer>) entry.getValue();
+                            File categoryFile = new File("plugins/AuctionHouseX/Auctionhouse/" + entry.getKey());
+                            FileConfiguration categoryFileCfg = YamlConfiguration.loadConfiguration(categoryFile);
+
+                            //> Sort listings (cheapest)
+                            Map<Integer, Double> listingPrices = new HashMap<>();
+                            for (int listing : listings) {
+                                double price = categoryFileCfg.getDouble(listing + ".price");
+                                listingPrices.put(listing, price);
+                            }
+
+                            List<Map.Entry<Integer, Double>> list = new ArrayList<>(listingPrices.entrySet());
+                            list.sort(Map.Entry.comparingByValue());
+
+                            List<Integer> cheapestListings = new ArrayList<>();
+                            for (Map.Entry<Integer, Double> entry2 : list) {
+                                cheapestListings.add(entry2.getKey());
+                            }
+
+                            for (int i = itemsOnPage; i < cheapestListings.size(); i++) {
+                                if (categoryFileCfg.getString(cheapestListings.get(i) + ".seller") != null) {
+                                    if (currentListingsGUI.getItem(itemSlot) != null) {
+                                        if (itemSlot <= 52) {
+                                            itemSlot++;
+                                        }
+                                    }
+
+                                    if (currentListingsGUI.getItem(itemSlot) == null) {
+                                        String time = AuctionHouseX.getInstance().getTimeHandler().convertListingTime(categoryFileCfg.getLong(cheapestListings.get(i) + ".time"));
+                                        double price = categoryFileCfg.getDouble(cheapestListings.get(i) + ".price");
+
+                                        if (!AuctionHouseX.getInstance().getAuctionhouseManager().isExpired(categoryFile, categoryFileCfg, cheapestListings.get(i))) {
+                                            if (itemSlot != clickedSlot) {
+                                                ItemStack item = categoryFileCfg.getItemStack(cheapestListings.get(i) + ".item");
+                                                ItemMeta itemMeta = item.getItemMeta();
+                                                List<String> itemLore = new ArrayList<>();
+                                                if (itemMeta.hasLore()) {
+                                                    itemLore = itemMeta.getLore();
+                                                }
+                                                itemLore.add("§8------------------------------");
+                                                itemLore.add(" ");
+                                                itemLore.add("§9Price: §e$" + price);
+                                                itemLore.add("§9Expire: §e" + time);
+                                                itemLore.add(" ");
+                                                itemLore.add("§cShift-Right-Click to cancel.");
+                                                itemLore.add("§8------------------------------");
+                                                itemMeta.setLore(itemLore);
+                                                item.setItemMeta(itemMeta);
+                                                currentListingsGUI.setItem(itemSlot, item);
+                                            } else {
+                                                //> Cancel item
+                                                AuctionHouseX.getInstance().getAuctionhouseManager().cancelListing(categoryFile, categoryFileCfg, cheapestListings.get(i));
                                                 itemSlot--;
                                             }
                                         } else {

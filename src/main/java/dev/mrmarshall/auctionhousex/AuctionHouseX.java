@@ -72,7 +72,10 @@ public class AuctionHouseX extends JavaPlugin {
     private void setupChatManager() {
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
             RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-            chatManager = rsp.getProvider();
+            try {
+                chatManager = rsp.getProvider();
+            } catch (NullPointerException ex) {
+            }
         }
     }
 
