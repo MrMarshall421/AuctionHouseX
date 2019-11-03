@@ -1,0 +1,23 @@
+item-show:
+  format: "%prefix%&f%player% %suffix%&f: &f%message%"
+auction:
+  listingPrice: 0.0
+  listingRate: 0.0
+  listingDuration: "7d 0h 0m"
+  expiredDuration: "14d 0h 0m"
+  unclaimedDuration: "90d 0h 0m"
+  cleanupDuration: "0d 24h 0m"
+  soldDuration: "365d 0h 0m"
+  preventCreative: true
+  preventSpectator: true
+  maxSellPrice: 1000000.00
+  salesTax: "0%"
+  allowDamagedItems: false
+  defaultMaxListings: 45
+  announce: true
+blacklist:
+  - "bedrock"
+  - "barrier"
+  - "command_block"
+  - "structure_block"
+disabled-worlds: []
