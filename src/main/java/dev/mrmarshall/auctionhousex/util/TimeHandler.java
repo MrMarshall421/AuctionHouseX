@@ -13,7 +13,7 @@ public class TimeHandler {
         long currentTime = System.currentTimeMillis();
         long expireTime = (time + convertFormattedToMillis(AuctionHouseX.getInstance().getConfig().getString("auction.listingDuration"))) - currentTime;
         Date currentDate = new Date(expireTime);
-        DateFormat dateFormat = new SimpleDateFormat("dd'd' hh'h' mm'm' ss's'");
+        DateFormat dateFormat = new SimpleDateFormat("dd'd' hh'h' mm'm'");
         return dateFormat.format(currentDate);
     }
 
