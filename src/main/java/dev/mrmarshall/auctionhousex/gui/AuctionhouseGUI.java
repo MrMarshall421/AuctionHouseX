@@ -116,7 +116,9 @@ public class AuctionhouseGUI implements Listener {
             if (e.getSlot() == 8) {
                 //> Next Page
                 if (currentPage <= 9) {
-                    open(p, currentCategory, currentPage + 1, currentSortingOrder);
+                    if (e.getInventory().getItem(43) != null && e.getInventory().getItem(43).getType() != Material.AIR) {
+                        open(p, currentCategory, currentPage + 1, currentSortingOrder);
+                    }
                 }
             } else if (e.getSlot() == 17) {
                 //> Previous Page

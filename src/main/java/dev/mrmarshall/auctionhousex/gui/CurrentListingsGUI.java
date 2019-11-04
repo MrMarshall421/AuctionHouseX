@@ -96,7 +96,9 @@ public class CurrentListingsGUI implements Listener {
             if (e.getSlot() == 8) {
                 //> Next Page
                 if (currentPage <= 9) {
-                    open(p, currentSortingOrder, currentPage + 1);
+                    if (e.getInventory().getItem(51) != null && e.getInventory().getItem(51).getType() != Material.AIR) {
+                        open(p, currentSortingOrder, currentPage + 1);
+                    }
                 }
             } else if (e.getSlot() == 17) {
                 //> Previous Page
