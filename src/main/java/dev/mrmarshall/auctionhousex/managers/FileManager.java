@@ -93,6 +93,35 @@ public class FileManager {
         return finalList;
     }
 
+    public Map<String, List<Integer>> getAllListings() {
+        Map<String, List<Integer>> finalList = new HashMap<>();
+        File dir = new File("plugins/AuctionHouseX/Auctionhouse");
+        File[] directoryListing = dir.listFiles();
+        if (directoryListing != null) {
+            for (File file : directoryListing) {
+                if (!(file.getName().equals("instruction.yml") || file.getName().equals("Expired.yml"))) {
+                    FileConfiguration fileCfg = YamlConfiguration.loadConfiguration(file);
+                    Map<String, Object> listings = fileCfg.getValues(false);
+                    Iterator iterator = listings.entrySet().iterator();
+                    List<Integer> list = new ArrayList<>();
+
+                    while (iterator.hasNext()) {
+                        Map.Entry entry = (Map.Entry) iterator.next();
+                        int listingId = Integer.parseInt(entry.getKey().toString());
+
+                        if (fileCfg.getString(listingId + ".seller") != null) {
+                            list.add(listingId);
+                        }
+                    }
+
+                    finalList.put(file.getName(), list);
+                }
+            }
+        }
+
+        return finalList;
+    }
+
     public ItemStack getInstructionBook(FileConfiguration instructionCfg) {
         ItemStack instructionBook = new ItemStack(Material.BOOK);
         ItemMeta instructionBookMeta = instructionBook.getItemMeta();
@@ -195,17 +224,6 @@ public class FileManager {
         if (!expired.exists()) {
             try {
                 expired.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        File sold = new File("plugins/AuctionHouseX/Auctionhouse/Sold.yml");
-        FileConfiguration soldCfg = YamlConfiguration.loadConfiguration(sold);
-        //> Sold File
-        if (!sold.exists()) {
-            try {
-                sold.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }

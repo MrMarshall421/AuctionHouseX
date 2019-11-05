@@ -92,6 +92,10 @@ public class AuctionhouseGUI implements Listener {
         AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().remove(p.getUniqueId());
         AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().put(p.getUniqueId(), page);
 
+        if (!AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentCategory().containsKey(p.getUniqueId())) {
+            AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentCategory().put(p.getUniqueId(), category);
+        }
+
         //> Open GUI
         if (!p.getOpenInventory().getTitle().equals("§bAuctionhouse§6§lX")) {
             p.openInventory(auctionhouseGUI);
@@ -110,7 +114,7 @@ public class AuctionhouseGUI implements Listener {
         if (e.getView().getTitle().equals("§bAuctionhouse§6§lX")) {
             e.setCancelled(true);
 
-            String currentCategory = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentCategory(e.getInventory());
+            String currentCategory = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentCategory().get(p.getUniqueId());
             String currentSortingOrder = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentSortingOrder(p);
             int currentPage = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().get(p.getUniqueId());
             if (e.getSlot() == 8) {

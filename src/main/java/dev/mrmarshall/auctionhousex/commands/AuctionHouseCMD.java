@@ -4,6 +4,7 @@ import dev.mrmarshall.auctionhousex.AuctionHouseX;
 import dev.mrmarshall.auctionhousex.gui.ListingPriceConfirmationGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,7 +44,7 @@ public class AuctionHouseCMD implements CommandExecutor {
 
             if (args.length == 0) {
                 //> Open Auctionhouse
-                AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "Blocks", 1, "oldest");
+                AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "Blocks", 1, "newest");
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     //> Reload Command
@@ -78,6 +79,9 @@ public class AuctionHouseCMD implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("return")) {
                     //> Returns all expired/cancelled items to Auctionhouse
 
+                } else if (args[0].equalsIgnoreCase("search")) {
+                    //> Show /ah search usage
+                    p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cPlease use /ah search <item>");
                 } else {
                     //> Show Help
                     sendHelp(p, 1);
@@ -137,6 +141,16 @@ public class AuctionHouseCMD implements CommandExecutor {
                         }
                     } else {
                         p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
+                } else if (args[0].equalsIgnoreCase("search")) {
+                    //> Search for item with material filter
+                    Material material = Material.getMaterial(args[1].toUpperCase());
+
+                    if (material != null) {
+                        //> Open filtered Auctionhouse
+                        AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, args[1].toUpperCase(), 1, "newest");
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cThere is no item called " + args[1].toUpperCase());
                     }
                 } else {
                     //> Show Help
