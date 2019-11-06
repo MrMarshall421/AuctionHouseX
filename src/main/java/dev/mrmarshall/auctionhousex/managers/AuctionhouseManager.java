@@ -79,13 +79,7 @@ public class AuctionhouseManager {
     }
 
     public String getCurrentSortingOrder(Player p) {
-        int sortingSlot = 0;
-
-        if (p.getOpenInventory().getTitle().equals("§bAuctionhouse§6§lX")) {
-            sortingSlot = 26;
-        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings")) {
-            sortingSlot = 26;
-        }
+        int sortingSlot = 26;
 
         if (p.getOpenInventory().getTopInventory().getItem(sortingSlot).getType() == Material.ENDER_EYE) {
             //> Sorting order: OLDEST
@@ -130,7 +124,7 @@ public class AuctionhouseManager {
                 case 10:
                     return 360;
             }
-        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings")) {
+        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings") || p.getOpenInventory().getTitle().equals("§2Recently Sold Items")) {
             switch (page) {
                 case 2:
                     return 42;
@@ -166,7 +160,7 @@ public class AuctionhouseManager {
                     }
                 }
             }
-        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings")) {
+        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings") || p.getOpenInventory().getTitle().equals("§2Recently Sold Items")) {
             for (int i = 0; i < p.getOpenInventory().getTopInventory().getSize(); i++) {
                 if (i != 7 && i != 8 && i != 16 && i != 17 && i != 25 && i != 26 && i != 34 && i != 35 && i != 43 && i != 44 && i != 52 && i != 53) {
                     try {
@@ -766,6 +760,159 @@ public class AuctionhouseManager {
                     }
                 }
             }
+            //> Recently Sold Items GUI
+        } else if (p.getOpenInventory().getTitle().equals("§2Recently Sold Items")) {
+            Inventory recentlySoldGUI = p.getOpenInventory().getTopInventory();
+            String sortOrder = getCurrentSortingOrder(p);
+            int itemsOnPage = getItemsOnPage(p, page);
+            File soldFile = new File("plugins/AuctionHouseX/Auctionhouse/Sold.yml");
+            FileConfiguration soldFileCfg = YamlConfiguration.loadConfiguration(soldFile);
+            List<Integer> listings = AuctionHouseX.getInstance().getFileManager().getPlayerSoldListings(p);
+
+            clearCurrentAuctionhouse(p);
+
+            int itemSlot = 0;
+            if (sortOrder.equals("oldest")) {
+                for (int i = itemsOnPage; i < listings.size(); i++) {
+                    if (soldFileCfg.getString(listings.get(i) + ".seller") != null) {
+                        if (recentlySoldGUI.getItem(itemSlot) != null) {
+                            if (itemSlot <= 52) {
+                                itemSlot++;
+                            }
+                        }
+
+                        if (recentlySoldGUI.getItem(itemSlot) == null) {
+                            String seller = Bukkit.getOfflinePlayer(UUID.fromString(soldFileCfg.getString(listings.get(i) + ".seller"))).getName();
+                            String buyer = Bukkit.getOfflinePlayer(UUID.fromString(soldFileCfg.getString(listings.get(i) + ".buyer"))).getName();
+                            String time = AuctionHouseX.getInstance().getTimeHandler().convertSoldTime(soldFileCfg.getLong(listings.get(i) + ".time"));
+                            double price = soldFileCfg.getDouble(listings.get(i) + ".price");
+
+                            ItemStack item = soldFileCfg.getItemStack(listings.get(i) + ".item");
+                            ItemMeta itemMeta = item.getItemMeta();
+                            List<String> itemLore = new ArrayList<>();
+                            if (itemMeta.hasLore()) {
+                                itemLore = itemMeta.getLore();
+                            }
+                            itemLore.add("§8------------------------------");
+                            itemLore.add(" ");
+                            itemLore.add("§9Seller: §e" + seller);
+                            itemLore.add("§9Buyer: §e" + buyer);
+                            itemLore.add("§9Price: §e$" + price);
+                            itemLore.add("§9Sold: §e" + time);
+                            itemLore.add(" ");
+                            itemLore.add("§8------------------------------");
+                            itemMeta.setLore(itemLore);
+                            item.setItemMeta(itemMeta);
+                            recentlySoldGUI.setItem(itemSlot, item);
+                        }
+
+                        if (itemSlot <= 52) {
+                            itemSlot++;
+                        }
+                    }
+                }
+            } else if (sortOrder.equals("newest")) {
+                for (int i = listings.size() - 1; i > itemsOnPage - 1; i--) {
+                    if (soldFileCfg.getString(listings.get(i) + ".seller") != null) {
+                        if (recentlySoldGUI.getItem(itemSlot) != null) {
+                            if (itemSlot <= 52) {
+                                itemSlot++;
+                            }
+                        }
+
+                        if (recentlySoldGUI.getItem(itemSlot) == null) {
+                            int listing = listings.get(i);
+                            if (page > 1) {
+                                listing = ((listings.size() - 1) - itemsOnPage) - itemSlot;
+                            }
+                            String seller = Bukkit.getOfflinePlayer(UUID.fromString(soldFileCfg.getString(listing + ".seller"))).getName();
+                            String buyer = Bukkit.getOfflinePlayer(UUID.fromString(soldFileCfg.getString(listing + ".buyer"))).getName();
+                            String time = AuctionHouseX.getInstance().getTimeHandler().convertSoldTime(soldFileCfg.getLong(listing + ".time"));
+                            double price = soldFileCfg.getDouble(listing + ".price");
+
+                            ItemStack item = soldFileCfg.getItemStack(listing + ".item");
+                            ItemMeta itemMeta = item.getItemMeta();
+                            List<String> itemLore = new ArrayList<>();
+                            if (itemMeta.hasLore()) {
+                                itemLore = itemMeta.getLore();
+                            }
+                            itemLore.add("§8------------------------------");
+                            itemLore.add(" ");
+                            itemLore.add("§9Seller: §e" + seller);
+                            itemLore.add("§9Buyer: §e" + buyer);
+                            itemLore.add("§9Price: §e$" + price);
+                            itemLore.add("§9Sold: §e" + time);
+                            itemLore.add(" ");
+                            itemLore.add("§8------------------------------");
+                            itemMeta.setLore(itemLore);
+                            item.setItemMeta(itemMeta);
+                            recentlySoldGUI.setItem(itemSlot, item);
+                        }
+
+                        if (itemSlot <= 52) {
+                            itemSlot++;
+                        }
+                    }
+                }
+            } else if (sortOrder.equals("cheapest")) {
+                //> Sort listings (cheapest)
+                Map<Integer, Double> listingPrices = new HashMap<>();
+                for (int listing : listings) {
+                    double price = soldFileCfg.getDouble(listing + ".price");
+                    listingPrices.put(listing, price);
+                }
+
+                List<Map.Entry<Integer, Double>> list = new ArrayList<>(listingPrices.entrySet());
+                list.sort(Map.Entry.comparingByValue());
+
+                List<Integer> cheapestListings = new ArrayList<>();
+                for (Map.Entry<Integer, Double> entry : list) {
+                    cheapestListings.add(entry.getKey());
+                }
+
+                for (int i = itemsOnPage; i < cheapestListings.size(); i++) {
+                    if (soldFileCfg.getString(cheapestListings.get(i) + ".seller") != null) {
+                        if (recentlySoldGUI.getItem(itemSlot) != null) {
+                            if (itemSlot <= 52) {
+                                itemSlot++;
+                            }
+                        }
+
+                        if (recentlySoldGUI.getItem(itemSlot) == null) {
+                            int listing = cheapestListings.get(i);
+                            if (page > 1) {
+                                listing = ((cheapestListings.size() - 1) - itemsOnPage) - itemSlot;
+                            }
+                            String seller = Bukkit.getOfflinePlayer(UUID.fromString(soldFileCfg.getString(listing + ".seller"))).getName();
+                            String buyer = Bukkit.getOfflinePlayer(UUID.fromString(soldFileCfg.getString(listing + ".buyer"))).getName();
+                            String time = AuctionHouseX.getInstance().getTimeHandler().convertSoldTime(soldFileCfg.getLong(listing + ".time"));
+                            double price = soldFileCfg.getDouble(listing + ".price");
+
+                            ItemStack item = soldFileCfg.getItemStack(listing + ".item");
+                            ItemMeta itemMeta = item.getItemMeta();
+                            List<String> itemLore = new ArrayList<>();
+                            if (itemMeta.hasLore()) {
+                                itemLore = itemMeta.getLore();
+                            }
+                            itemLore.add("§8------------------------------");
+                            itemLore.add(" ");
+                            itemLore.add("§9Seller: §e" + seller);
+                            itemLore.add("§9Buyer: §e" + buyer);
+                            itemLore.add("§9Price: §e$" + price);
+                            itemLore.add("§9Sold: §e" + time);
+                            itemLore.add(" ");
+                            itemLore.add("§8------------------------------");
+                            itemMeta.setLore(itemLore);
+                            item.setItemMeta(itemMeta);
+                            recentlySoldGUI.setItem(itemSlot, item);
+                        }
+
+                        if (itemSlot <= 52) {
+                            itemSlot++;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -858,8 +1005,8 @@ public class AuctionhouseManager {
 
         soldCfg.set(nextSoldId + ".seller", fileCfg.getString(id + ".seller"));
         soldCfg.set(nextSoldId + ".buyer", p.getUniqueId().toString());
-        soldCfg.set(nextSoldId + ".item", fileCfg.getString(id + ".item"));
-        soldCfg.set(nextSoldId + ".price", fileCfg.getString(id + ".price"));
+        soldCfg.set(nextSoldId + ".item", fileCfg.getItemStack(id + ".item"));
+        soldCfg.set(nextSoldId + ".price", fileCfg.getDouble(id + ".price"));
         soldCfg.set(nextSoldId + ".time", System.currentTimeMillis());
         try {
             soldCfg.save(sold);

@@ -183,23 +183,23 @@ public class AuctionhouseGUI implements Listener {
 
                 int itemSlot = 0;
                 if (currentSortingOrder.equals("oldest")) {
+                    boolean bought = false;
                     for (int i = itemsOnPage; i < listings.size(); i++) {
-                        if (categoryFileCfg.getString(listings.get(i) + ".seller") != null) {
-                            if (auctionhouseGUI.getItem(itemSlot) != null) {
-                                if (itemSlot <= 52) {
-                                    itemSlot++;
+                        if (!bought) {
+                            if (categoryFileCfg.getString(listings.get(i) + ".seller") != null) {
+                                if (auctionhouseGUI.getItem(itemSlot) != null) {
+                                    if (itemSlot <= 52) {
+                                        itemSlot++;
+                                    }
                                 }
-                            }
 
-                            if (auctionhouseGUI.getItem(itemSlot) == null) {
-                                String seller = Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listings.get(i) + ".seller"))).getName();
-                                String time = AuctionHouseX.getInstance().getTimeHandler().convertListingTime(categoryFileCfg.getLong(listings.get(i) + ".time"));
-                                double price = categoryFileCfg.getDouble(listings.get(i) + ".price");
-
-                                boolean itemBought = false;
-                                if (!AuctionHouseX.getInstance().getAuctionhouseManager().isExpired(categoryFile, categoryFileCfg, listings.get(i))) {
+                                if (auctionhouseGUI.getItem(itemSlot) == null) {
                                     if (itemSlot == clickedSlot) {
-                                        //> Buy Item
+                                        //> Buy item
+                                        String seller = Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listings.get(i) + ".seller"))).getName();
+                                        double price = categoryFileCfg.getDouble(listings.get(i) + ".price");
+                                        Player target = Bukkit.getPlayer(seller);
+
                                         if (seller != p.getName()) {
                                             if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
                                                 // TODO: SALES TAXES
@@ -208,7 +208,15 @@ public class AuctionhouseGUI implements Listener {
                                                 p.getInventory().addItem(categoryFileCfg.getItemStack(listings.get(i) + ".item"));
                                                 p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
                                                 AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listings.get(i) + ".seller"))), price);
-                                                itemBought = true;
+
+                                                if (target != null && target.isOnline()) {
+                                                    target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                }
+
+                                                AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, listings.get(i));
+                                                itemSlot--;
+                                                bought = true;
+                                                break;
                                             } else {
                                                 p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou don't have enough money!");
                                             }
@@ -216,77 +224,57 @@ public class AuctionhouseGUI implements Listener {
                                             p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou can't buy your own items!");
                                         }
                                     }
+                                }
 
-                                    if (!itemBought) {
-                                        ItemStack item = categoryFileCfg.getItemStack(listings.get(i) + ".item");
-                                        ItemMeta itemMeta = item.getItemMeta();
-                                        List<String> itemLore = new ArrayList<>();
-                                        if (itemMeta.hasLore()) {
-                                            itemLore = itemMeta.getLore();
-                                        }
-                                        itemLore.add("§8------------------------------");
-                                        if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                            itemLore.add("§aYou can purchase this item.");
-                                        } else {
-                                            itemLore.add("§6You can not purchase this item.");
-                                        }
-                                        itemLore.add(" ");
-                                        itemLore.add("§9Price: §e$" + price);
-                                        itemLore.add("§9Seller: §e" + seller);
-                                        itemLore.add("§9Expire: §e" + time);
-                                        itemLore.add(" ");
-                                        itemLore.add("§8------------------------------");
-                                        itemMeta.setLore(itemLore);
-                                        item.setItemMeta(itemMeta);
-                                        auctionhouseGUI.setItem(itemSlot, item);
-                                    } else {
-                                        //> Remove bought item
-                                        AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, listings.get(i));
-                                        itemSlot--;
-                                    }
-
-                                } else {
-                                    //> Item expired
-                                    itemSlot--;
+                                if (itemSlot <= 52) {
+                                    itemSlot++;
                                 }
                             }
-
-                            if (itemSlot <= 52) {
-                                itemSlot++;
-                            }
+                        } else {
+                            break;
                         }
                     }
+
+                    AuctionHouseX.getInstance().getAuctionhouseManager().refreshAuctionhouse(p, currentCategory, currentPage);
                 } else if (currentSortingOrder.equals("newest")) {
+                    boolean bought = false;
                     for (int i = listings.size() - 1; i > itemsOnPage - 1; i--) {
-                        if (categoryFileCfg.getString(listings.get(i) + ".seller") != null) {
-                            if (auctionhouseGUI.getItem(itemSlot) != null) {
-                                if (itemSlot <= 52) {
-                                    itemSlot++;
+                        if (!bought) {
+                            if (categoryFileCfg.getString(listings.get(i) + ".seller") != null) {
+                                if (auctionhouseGUI.getItem(itemSlot) != null) {
+                                    if (itemSlot <= 52) {
+                                        itemSlot++;
+                                    }
                                 }
-                            }
 
-                            if (auctionhouseGUI.getItem(itemSlot) == null) {
-                                int listing = listings.get(i);
-                                if (currentPage > 1) {
-                                    listing = ((listings.size() - 1) - itemsOnPage) - itemSlot;
-                                }
-                                String seller = Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))).getName();
-                                String time = AuctionHouseX.getInstance().getTimeHandler().convertListingTime(categoryFileCfg.getLong(listing + ".time"));
-                                double price = categoryFileCfg.getDouble(listing + ".price");
-
-                                boolean itemBought = false;
-                                if (!AuctionHouseX.getInstance().getAuctionhouseManager().isExpired(categoryFile, categoryFileCfg, listings.get(i))) {
+                                if (auctionhouseGUI.getItem(itemSlot) == null) {
                                     if (itemSlot == clickedSlot) {
-                                        //> Buy Item
+                                        int listing = listings.get(i);
+                                        if (currentPage > 1) {
+                                            listing = ((listings.size() - 1) - itemsOnPage) - itemSlot;
+                                        }
+                                        //> Buy item
+                                        String seller = Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))).getName();
+                                        double price = categoryFileCfg.getDouble(listing + ".price");
+                                        Player target = Bukkit.getPlayer(seller);
+
                                         if (seller != p.getName()) {
                                             if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
                                                 // TODO: SALES TAXES
                                                 AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), price);
                                                 p.closeInventory();
-                                                p.getInventory().addItem(categoryFileCfg.getItemStack(listings.get(i) + ".item"));
+                                                p.getInventory().addItem(categoryFileCfg.getItemStack(listing + ".item"));
                                                 p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
-                                                AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listings.get(i) + ".seller"))), price);
-                                                itemBought = true;
+                                                AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))), price);
+
+                                                if (target != null && target.isOnline()) {
+                                                    target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                }
+
+                                                AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, listing);
+                                                itemSlot--;
+                                                bought = true;
+                                                break;
                                             } else {
                                                 p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou don't have enough money!");
                                             }
@@ -294,45 +282,18 @@ public class AuctionhouseGUI implements Listener {
                                             p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou can't buy your own items!");
                                         }
                                     }
+                                }
 
-                                    if (!itemBought) {
-                                        ItemStack item = categoryFileCfg.getItemStack(listing + ".item");
-                                        ItemMeta itemMeta = item.getItemMeta();
-                                        List<String> itemLore = new ArrayList<>();
-                                        if (itemMeta.hasLore()) {
-                                            itemLore = itemMeta.getLore();
-                                        }
-                                        itemLore.add("§8------------------------------");
-                                        if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                            itemLore.add("§aYou can purchase this item.");
-                                        } else {
-                                            itemLore.add("§6You can not purchase this item.");
-                                        }
-                                        itemLore.add(" ");
-                                        itemLore.add("§9Price: §e$" + price);
-                                        itemLore.add("§9Seller: §e" + seller);
-                                        itemLore.add("§9Expire: §e" + time);
-                                        itemLore.add(" ");
-                                        itemLore.add("§8------------------------------");
-                                        itemMeta.setLore(itemLore);
-                                        item.setItemMeta(itemMeta);
-                                        auctionhouseGUI.setItem(itemSlot, item);
-                                    } else {
-                                        //> Remove bought item
-                                        AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, listings.get(i));
-                                        itemSlot--;
-                                    }
-                                } else {
-                                    //> Item expired
-                                    itemSlot--;
+                                if (itemSlot <= 52) {
+                                    itemSlot++;
                                 }
                             }
-
-                            if (itemSlot <= 52) {
-                                itemSlot++;
-                            }
+                        } else {
+                            break;
                         }
                     }
+
+                    AuctionHouseX.getInstance().getAuctionhouseManager().refreshAuctionhouse(p, currentCategory, currentPage);
                 } else {
                     //> Sort listings (cheapest)
                     Map<Integer, Double> listingPrices = new HashMap<>();
@@ -349,36 +310,44 @@ public class AuctionhouseGUI implements Listener {
                         cheapestListings.add(entry.getKey());
                     }
 
+                    boolean bought = false;
                     for (int i = itemsOnPage; i < cheapestListings.size(); i++) {
-                        if (categoryFileCfg.getString(cheapestListings.get(i) + ".seller") != null) {
-                            if (auctionhouseGUI.getItem(itemSlot) != null) {
-                                if (itemSlot <= 52) {
-                                    itemSlot++;
+                        if (!bought) {
+                            if (categoryFileCfg.getString(cheapestListings.get(i) + ".seller") != null) {
+                                if (auctionhouseGUI.getItem(itemSlot) != null) {
+                                    if (itemSlot <= 52) {
+                                        itemSlot++;
+                                    }
                                 }
-                            }
 
-                            if (auctionhouseGUI.getItem(itemSlot) == null) {
-                                int listing = cheapestListings.get(i);
-                                if (currentPage > 1) {
-                                    listing = ((cheapestListings.size() - 1) - itemsOnPage) - itemSlot;
-                                }
-                                String seller = Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))).getName();
-                                String time = AuctionHouseX.getInstance().getTimeHandler().convertListingTime(categoryFileCfg.getLong(listing + ".time"));
-                                double price = categoryFileCfg.getDouble(listing + ".price");
-
-                                boolean itemBought = false;
-                                if (!AuctionHouseX.getInstance().getAuctionhouseManager().isExpired(categoryFile, categoryFileCfg, cheapestListings.get(i))) {
+                                if (auctionhouseGUI.getItem(itemSlot) == null) {
                                     if (itemSlot == clickedSlot) {
-                                        //> Buy Item
+                                        int listing = cheapestListings.get(i);
+                                        if (currentPage > 1) {
+                                            listing = ((cheapestListings.size() - 1) - itemsOnPage) - itemSlot;
+                                        }
+                                        //> Buy item
+                                        String seller = Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))).getName();
+                                        double price = categoryFileCfg.getDouble(listing + ".price");
+                                        Player target = Bukkit.getPlayer(seller);
+
                                         if (seller != p.getName()) {
                                             if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
                                                 // TODO: SALES TAXES
                                                 AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), price);
                                                 p.closeInventory();
-                                                p.getInventory().addItem(categoryFileCfg.getItemStack(listings.get(i) + ".item"));
+                                                p.getInventory().addItem(categoryFileCfg.getItemStack(listing + ".item"));
                                                 p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
-                                                AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(cheapestListings.get(i) + ".seller"))), price);
-                                                itemBought = true;
+                                                AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))), price);
+
+                                                if (target != null && target.isOnline()) {
+                                                    target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                }
+
+                                                AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, listing);
+                                                itemSlot--;
+                                                bought = true;
+                                                break;
                                             } else {
                                                 p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou don't have enough money!");
                                             }
@@ -386,45 +355,18 @@ public class AuctionhouseGUI implements Listener {
                                             p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou can't buy your own items!");
                                         }
                                     }
+                                }
 
-                                    if (!itemBought) {
-                                        ItemStack item = categoryFileCfg.getItemStack(listing + ".item");
-                                        ItemMeta itemMeta = item.getItemMeta();
-                                        List<String> itemLore = new ArrayList<>();
-                                        if (itemMeta.hasLore()) {
-                                            itemLore = itemMeta.getLore();
-                                        }
-                                        itemLore.add("§8------------------------------");
-                                        if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                            itemLore.add("§aYou can purchase this item.");
-                                        } else {
-                                            itemLore.add("§6You can not purchase this item.");
-                                        }
-                                        itemLore.add(" ");
-                                        itemLore.add("§9Price: §e$" + price);
-                                        itemLore.add("§9Seller: §e" + seller);
-                                        itemLore.add("§9Expire: §e" + time);
-                                        itemLore.add(" ");
-                                        itemLore.add("§8------------------------------");
-                                        itemMeta.setLore(itemLore);
-                                        item.setItemMeta(itemMeta);
-                                        auctionhouseGUI.setItem(itemSlot, item);
-                                    } else {
-                                        //> Remove bought item
-                                        AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, cheapestListings.get(i));
-                                        itemSlot--;
-                                    }
-                                } else {
-                                    //> Item expired
-                                    itemSlot--;
+                                if (itemSlot <= 52) {
+                                    itemSlot++;
                                 }
                             }
-
-                            if (itemSlot <= 52) {
-                                itemSlot++;
-                            }
+                        } else {
+                            break;
                         }
                     }
+
+                    AuctionHouseX.getInstance().getAuctionhouseManager().refreshAuctionhouse(p, currentCategory, currentPage);
                 }
             }
         }

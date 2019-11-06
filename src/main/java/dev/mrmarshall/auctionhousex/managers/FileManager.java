@@ -70,7 +70,7 @@ public class FileManager {
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File file : directoryListing) {
-                if (!(file.getName().equals("instruction.yml") || file.getName().equals("Expired.yml"))) {
+                if (!(file.getName().equals("instruction.yml") || file.getName().equals("Expired.yml") || file.getName().equals("Sold.yml"))) {
                     FileConfiguration fileCfg = YamlConfiguration.loadConfiguration(file);
                     Map<String, Object> listings = fileCfg.getValues(false);
                     Iterator iterator = listings.entrySet().iterator();
@@ -93,13 +93,32 @@ public class FileManager {
         return finalList;
     }
 
+    public List<Integer> getPlayerSoldListings(Player p) {
+        File sold = new File("plugins/AuctionHouseX/Auctionhouse/Sold.yml");
+        FileConfiguration soldCfg = YamlConfiguration.loadConfiguration(sold);
+        Map<String, Object> listings = soldCfg.getValues(false);
+        Iterator iterator = listings.entrySet().iterator();
+        List<Integer> list = new ArrayList<>();
+
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            int listingId = Integer.parseInt(entry.getKey().toString());
+
+            if (soldCfg.getString(listingId + ".seller").contains(p.getUniqueId().toString())) {
+                list.add(listingId);
+            }
+        }
+
+        return list;
+    }
+
     public Map<String, List<Integer>> getAllListings() {
         Map<String, List<Integer>> finalList = new HashMap<>();
         File dir = new File("plugins/AuctionHouseX/Auctionhouse");
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File file : directoryListing) {
-                if (!(file.getName().equals("instruction.yml") || file.getName().equals("Expired.yml"))) {
+                if (!(file.getName().equals("instruction.yml") || file.getName().equals("Expired.yml") || file.getName().equals("Sold.yml"))) {
                     FileConfiguration fileCfg = YamlConfiguration.loadConfiguration(file);
                     Map<String, Object> listings = fileCfg.getValues(false);
                     Iterator iterator = listings.entrySet().iterator();
@@ -219,11 +238,20 @@ public class FileManager {
         }
 
         File expired = new File("plugins/AuctionHouseX/Auctionhouse/Expired.yml");
-        FileConfiguration expiredCfg = YamlConfiguration.loadConfiguration(expired);
         //> Expired File
         if (!expired.exists()) {
             try {
                 expired.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        File sold = new File("plugins/AuctionHouseX/Auctionhouse/Sold.yml");
+        //> Sold File
+        if (!sold.exists()) {
+            try {
+                sold.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }

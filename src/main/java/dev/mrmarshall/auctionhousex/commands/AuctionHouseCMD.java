@@ -66,10 +66,10 @@ public class AuctionHouseCMD implements CommandExecutor {
                     }
                 } else if (args[0].equalsIgnoreCase("selling")) {
                     //> Show the items player is selling
-
+                    AuctionHouseX.getInstance().getCurrentListingsGUI().open(p, "newest", 1);
                 } else if (args[0].equalsIgnoreCase("sold")) {
                     //> Show the items player has sold
-
+                    AuctionHouseX.getInstance().getRecentlySoldGUI().open(p, "newest", 1);
                 } else if (args[0].equalsIgnoreCase("expired")) {
                     //> Show the expired items of a player
 

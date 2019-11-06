@@ -17,6 +17,14 @@ public class TimeHandler {
         return dateFormat.format(currentDate);
     }
 
+    public String convertSoldTime(long time) {
+        long currentTime = System.currentTimeMillis();
+        long soldTime = time - currentTime;
+        Date currentDate = new Date(soldTime);
+        DateFormat dateFormat = new SimpleDateFormat("dd'd hh'h mm'm");
+        return dateFormat.format(currentDate);
+    }
+
     public long convertFormattedToMillis(String formatted) {
         try {
             Date date = new SimpleDateFormat("dd'd' hh'h' mm'm'").parse(formatted);

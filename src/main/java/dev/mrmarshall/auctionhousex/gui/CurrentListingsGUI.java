@@ -118,7 +118,8 @@ public class CurrentListingsGUI implements Listener {
                     open(p, "oldest", currentPage);
                 }
             } else if (e.getSlot() == 35) {
-                //> TODO: OPEN RECENTLY SOLD ITEMS
+                p.closeInventory();
+                AuctionHouseX.getInstance().getRecentlySoldGUI().open(p, currentSortingOrder, currentPage);
             } else if (e.getSlot() == 44) {
                 //> TODO: OPEN CANCELLED/EXPIRED ITEMS
             } else if (e.getSlot() == 53) {
