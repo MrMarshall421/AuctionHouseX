@@ -126,41 +126,48 @@ public class CancelledExpiredGUI implements Listener {
                 }
             } else if (e.getSlot() == 35) {
                 //> Return all cancelled/expired items
-                File expired = new File("plugins/AuctionHouseX/Auctionhouse/Expired.yml");
-                FileConfiguration expiredCfg = YamlConfiguration.loadConfiguration(expired);
-
-                Map<String, Object> listings = expiredCfg.getValues(false);
-                Iterator iterator = listings.entrySet().iterator();
-
-                while (iterator.hasNext()) {
-                    Map.Entry entry = (Map.Entry) iterator.next();
-                    int listingId = Integer.parseInt(entry.getKey().toString());
-
-                    if (expiredCfg.getString(listingId + ".seller").contains(p.getUniqueId().toString())) {
-                        if (p.getInventory().firstEmpty() != -1) {
-                            p.getInventory().addItem(expiredCfg.getItemStack(listingId + ".item"));
-                            AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), expiredCfg.getDouble(listingId + ".price"));
-                            expiredCfg.set(listingId + "", null);
-                        } else {
-                            p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYour Inventory is full! Couldn't return all items.");
-                            break;
-                        }
-                    }
-                }
-
-                try {
-                    expiredCfg.save(expired);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-                AuctionHouseX.getInstance().getAuctionhouseManager().refreshAuctionhouse(p, "", currentPage);
-                p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully returned cancelled/expired items!");
+                returnCancelledExpired(p, currentPage);
             } else if (e.getSlot() == 53) {
                 //> Back
                 p.closeInventory();
                 AuctionHouseX.getInstance().getCurrentListingsGUI().open(p, currentSortingOrder, currentPage);
             }
         }
+    }
+
+    public void returnCancelledExpired(Player p, int currentPage) {
+        File expired = new File("plugins/AuctionHouseX/Auctionhouse/Expired.yml");
+        FileConfiguration expiredCfg = YamlConfiguration.loadConfiguration(expired);
+
+        Map<String, Object> listings = expiredCfg.getValues(false);
+        Iterator iterator = listings.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            int listingId = Integer.parseInt(entry.getKey().toString());
+
+            if (expiredCfg.getString(listingId + ".seller").contains(p.getUniqueId().toString())) {
+                if (p.getInventory().firstEmpty() != -1) {
+                    p.getInventory().addItem(expiredCfg.getItemStack(listingId + ".item"));
+                    AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), expiredCfg.getDouble(listingId + ".price"));
+                    expiredCfg.set(listingId + "", null);
+                } else {
+                    p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYour Inventory is full! Couldn't return all items.");
+                    break;
+                }
+            }
+        }
+
+        try {
+            expiredCfg.save(expired);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        if (currentPage != 0) {
+            AuctionHouseX.getInstance().getAuctionhouseManager().refreshAuctionhouse(p, "", currentPage);
+        }
+
+        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully returned cancelled/expired items!");
     }
 }

@@ -8,10 +8,16 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class AuctionHouseCMD implements CommandExecutor {
 
@@ -44,7 +50,11 @@ public class AuctionHouseCMD implements CommandExecutor {
 
             if (args.length == 0) {
                 //> Open Auctionhouse
-                AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "Blocks", 1, "newest");
+                if (p.hasPermission("auctionhouse.access")) {
+                    AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "Blocks", 1, "newest");
+                } else {
+                    p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                }
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     //> Reload Command
@@ -59,36 +69,84 @@ public class AuctionHouseCMD implements CommandExecutor {
                     }
                 } else if (args[0].equalsIgnoreCase("help")) {
                     //> Help Command
-                    if (p.hasPermission("auctionhouse.help")) {
+                    if (p.hasPermission("auctionhouse.access")) {
                         sendHelp(p, 1);
                     } else {
                         p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
                     }
                 } else if (args[0].equalsIgnoreCase("selling")) {
                     //> Show the items player is selling
-                    AuctionHouseX.getInstance().getCurrentListingsGUI().open(p, "newest", 1);
+                    if (p.hasPermission("auctionhouse.sell")) {
+                        AuctionHouseX.getInstance().getCurrentListingsGUI().open(p, "newest", 1);
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 } else if (args[0].equalsIgnoreCase("sold")) {
                     //> Show the items player has sold
-                    AuctionHouseX.getInstance().getRecentlySoldGUI().open(p, "newest", 1);
+                    if (p.hasPermission("auctionhouse.sell")) {
+                        AuctionHouseX.getInstance().getRecentlySoldGUI().open(p, "newest", 1);
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 } else if (args[0].equalsIgnoreCase("expired")) {
                     //> Show the expired items of a player
-                    AuctionHouseX.getInstance().getCancelledExpiredGUI().open(p, "newest", 1);
+                    if (p.hasPermission("auctionhouse.sell")) {
+                        AuctionHouseX.getInstance().getCancelledExpiredGUI().open(p, "newest", 1);
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 } else if (args[0].equalsIgnoreCase("cancel")) {
                     //> Cancels all auctions of a player
+                    if (p.hasPermission("auctionhouse.cancel")) {
+                        Map<String, List<Integer>> listingsMap = AuctionHouseX.getInstance().getFileManager().getPlayerListings(p);
+                        Iterator filesIterator = listingsMap.entrySet().iterator();
 
+                        while (filesIterator.hasNext()) {
+                            Map.Entry entry = (Map.Entry) filesIterator.next();
+                            List<Integer> listings = (List<Integer>) entry.getValue();
+                            File categoryFile = new File("plugins/AuctionHouseX/Auctionhouse/" + entry.getKey());
+                            FileConfiguration categoryFileCfg = YamlConfiguration.loadConfiguration(categoryFile);
+                            for (int i = 0; i < listings.size(); i++) {
+                                if (categoryFileCfg.getString(listings.get(i) + ".seller") != null) {
+                                    //> Cancel item
+                                    AuctionHouseX.getInstance().getAuctionhouseManager().cancelListing(categoryFile, categoryFileCfg, listings.get(i));
+                                }
+                            }
+                        }
+
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully cancelled all listings!");
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 } else if (args[0].equalsIgnoreCase("return")) {
                     //> Returns all expired/cancelled items to Auctionhouse
-
+                    if (p.hasPermission("auctionhouse.return")) {
+                        AuctionHouseX.getInstance().getCancelledExpiredGUI().returnCancelledExpired(p, 0);
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 } else if (args[0].equalsIgnoreCase("search")) {
                     //> Show /ah search usage
-                    p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cPlease use /ah search <item>");
+                    if (p.hasPermission("auctionhouse.access")) {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cPlease use /ah search <item>");
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 } else {
                     //> Show Help
-                    sendHelp(p, 1);
+                    if (p.hasPermission("auctionhouse.access")) {
+                        sendHelp(p, 1);
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("help") && args[1].equals("2")) {
-                    sendHelp(p, 2);
+                    if (p.hasPermission("auctionhouse.access")) {
+                        sendHelp(p, 2);
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 } else if (args[0].equalsIgnoreCase("sell")) {
                     if (p.hasPermission("auctionhouse.sell")) {
                         //> Sells item in hand
@@ -143,22 +201,48 @@ public class AuctionHouseCMD implements CommandExecutor {
                         p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
                     }
                 } else if (args[0].equalsIgnoreCase("search")) {
-                    //> Search for item with material filter
-                    Material material = Material.getMaterial(args[1].toUpperCase());
+                    if (p.hasPermission("auctionhouse.access")) {
+                        //> Search for item with material filter
+                        Material material = Material.getMaterial(args[1].toUpperCase());
 
-                    if (material != null) {
-                        //> Open filtered Auctionhouse
-                        AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, args[1].toUpperCase(), 1, "newest");
+                        if (material != null) {
+                            //> Open filtered Auctionhouse
+                            AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, args[1].toUpperCase(), 1, "newest");
+                        } else {
+                            p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cThere is no item called " + args[1].toUpperCase());
+                        }
                     } else {
-                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cThere is no item called " + args[1].toUpperCase());
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
+                } else if (args[0].equalsIgnoreCase("cancel")) {
+                    //> Cancels all listings from another player
+                    if (p.hasPermission("auctionhouse.cancel.others")) {
+                        Player target = Bukkit.getPlayer(UUID.fromString(args[1]));
+
+                        if (target != null) {
+                            AuctionHouseX.getInstance().getCancelledExpiredGUI().returnCancelledExpired(target, 0);
+                            p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully cancelled listings from " + target.getName() + "!");
+                        } else {
+                            p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cPlayer " + target.getName() + " is not online!");
+                        }
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
                     }
                 } else {
                     //> Show Help
-                    sendHelp(p, 1);
+                    if (p.hasPermission("auctionhouse.access")) {
+                        sendHelp(p, 1);
+                    } else {
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                    }
                 }
             } else {
                 //> Show Help
-                sendHelp(p, 1);
+                if (p.hasPermission("auctionhouse.access")) {
+                    sendHelp(p, 1);
+                } else {
+                    p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                }
             }
         }
 
