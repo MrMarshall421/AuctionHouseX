@@ -1,6 +1,7 @@
 package dev.mrmarshall.auctionhousex;
 
 import dev.mrmarshall.auctionhousex.gui.AuctionhouseGUI;
+import dev.mrmarshall.auctionhousex.gui.CancelledExpiredGUI;
 import dev.mrmarshall.auctionhousex.gui.CurrentListingsGUI;
 import dev.mrmarshall.auctionhousex.gui.RecentlySoldGUI;
 import dev.mrmarshall.auctionhousex.items.EnchantingBottle;
@@ -33,6 +34,7 @@ public class AuctionHouseX extends JavaPlugin {
     private AuctionhouseGUI auctionhouseGUI;
     private CurrentListingsGUI currentListingsGUI;
     private RecentlySoldGUI recentlySoldGUI;
+    private CancelledExpiredGUI cancelledExpiredGUI;
 
     public static AuctionHouseX getInstance() {
         return instance;
@@ -58,6 +60,7 @@ public class AuctionHouseX extends JavaPlugin {
         auctionhouseGUI = new AuctionhouseGUI();
         currentListingsGUI = new CurrentListingsGUI();
         recentlySoldGUI = new RecentlySoldGUI();
+        cancelledExpiredGUI = new CancelledExpiredGUI();
     }
 
     public TradingManager getTradingManager() {
@@ -142,5 +145,9 @@ public class AuctionHouseX extends JavaPlugin {
 
     public RecentlySoldGUI getRecentlySoldGUI() {
         return recentlySoldGUI;
+    }
+
+    public CancelledExpiredGUI getCancelledExpiredGUI() {
+        return cancelledExpiredGUI;
     }
 }

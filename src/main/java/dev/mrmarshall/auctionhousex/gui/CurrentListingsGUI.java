@@ -121,7 +121,8 @@ public class CurrentListingsGUI implements Listener {
                 p.closeInventory();
                 AuctionHouseX.getInstance().getRecentlySoldGUI().open(p, currentSortingOrder, currentPage);
             } else if (e.getSlot() == 44) {
-                //> TODO: OPEN CANCELLED/EXPIRED ITEMS
+                p.closeInventory();
+                AuctionHouseX.getInstance().getCancelledExpiredGUI().open(p, currentSortingOrder, currentPage);
             } else if (e.getSlot() == 53) {
                 //> Back
                 p.closeInventory();

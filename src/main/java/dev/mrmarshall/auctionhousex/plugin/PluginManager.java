@@ -36,6 +36,7 @@ public class PluginManager {
         Bukkit.getPluginManager().registerEvents(new AuctionhouseGUI(), AuctionHouseX.getInstance());
         Bukkit.getPluginManager().registerEvents(new CurrentListingsGUI(), AuctionHouseX.getInstance());
         Bukkit.getPluginManager().registerEvents(new RecentlySoldGUI(), AuctionHouseX.getInstance());
+        Bukkit.getPluginManager().registerEvents(new CancelledExpiredGUI(), AuctionHouseX.getInstance());
     }
 
     private void loadCommands() {

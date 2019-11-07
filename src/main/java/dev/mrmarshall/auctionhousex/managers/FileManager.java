@@ -112,6 +112,25 @@ public class FileManager {
         return list;
     }
 
+    public List<Integer> getPlayerExpiredListings(Player p) {
+        File expired = new File("plugins/AuctionHouseX/Auctionhouse/Expired.yml");
+        FileConfiguration expiredCfg = YamlConfiguration.loadConfiguration(expired);
+        Map<String, Object> listings = expiredCfg.getValues(false);
+        Iterator iterator = listings.entrySet().iterator();
+        List<Integer> list = new ArrayList<>();
+
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            int listingId = Integer.parseInt(entry.getKey().toString());
+
+            if (expiredCfg.getString(listingId + ".seller").contains(p.getUniqueId().toString())) {
+                list.add(listingId);
+            }
+        }
+
+        return list;
+    }
+
     public Map<String, List<Integer>> getAllListings() {
         Map<String, List<Integer>> finalList = new HashMap<>();
         File dir = new File("plugins/AuctionHouseX/Auctionhouse");

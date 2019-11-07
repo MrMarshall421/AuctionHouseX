@@ -19,6 +19,7 @@ dev\mrmarshall\auctionhousex\gui\ListingPriceConfirmationGUI.class
 dev\mrmarshall\auctionhousex\gui\CurrentListingsGUI.class
 dev\mrmarshall\auctionhousex\AuctionHouseX.class
 dev\mrmarshall\auctionhousex\events\InventoryCloseListener.class
+dev\mrmarshall\auctionhousex\gui\RecentlySoldGUI.class
 dev\mrmarshall\auctionhousex\events\PlayerInteractListener.class
 dev\mrmarshall\auctionhousex\util\TimeHandler.class
 dev\mrmarshall\auctionhousex\managers\CategoryManager.class
@@ -30,3 +31,4 @@ dev\mrmarshall\auctionhousex\managers\FileManager.class
 dev\mrmarshall\auctionhousex\managers\AuctionhouseManager.class
 dev\mrmarshall\auctionhousex\events\InventoryClickListener.class
 dev\mrmarshall\auctionhousex\gui\TradingGUI.class
+dev\mrmarshall\auctionhousex\gui\CancelledExpiredGUI.class

@@ -124,7 +124,7 @@ public class AuctionhouseManager {
                 case 10:
                     return 360;
             }
-        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings") || p.getOpenInventory().getTitle().equals("§2Recently Sold Items")) {
+        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings") || p.getOpenInventory().getTitle().equals("§2Recently Sold Items") || p.getOpenInventory().getTitle().equals("§6Cancelled/Expired Listings")) {
             switch (page) {
                 case 2:
                     return 42;
@@ -160,7 +160,7 @@ public class AuctionhouseManager {
                     }
                 }
             }
-        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings") || p.getOpenInventory().getTitle().equals("§2Recently Sold Items")) {
+        } else if (p.getOpenInventory().getTitle().equals("§bYour Current Listings") || p.getOpenInventory().getTitle().equals("§2Recently Sold Items") || p.getOpenInventory().getTitle().equals("§6Cancelled/Expired Listings")) {
             for (int i = 0; i < p.getOpenInventory().getTopInventory().getSize(); i++) {
                 if (i != 7 && i != 8 && i != 16 && i != 17 && i != 25 && i != 26 && i != 34 && i != 35 && i != 43 && i != 44 && i != 52 && i != 53) {
                     try {
@@ -913,6 +913,147 @@ public class AuctionhouseManager {
                     }
                 }
             }
+            //> Cancelled/Expired Listings GUI
+        } else if (p.getOpenInventory().getTitle().equals("§6Cancelled/Expired Listings")) {
+            Inventory cancelledExpiredGUI = p.getOpenInventory().getTopInventory();
+            String sortOrder = getCurrentSortingOrder(p);
+            int itemsOnPage = getItemsOnPage(p, page);
+            File expired = new File("plugins/AuctionHouseX/Auctionhouse/Expired.yml");
+            FileConfiguration expiredCfg = YamlConfiguration.loadConfiguration(expired);
+            List<Integer> listings = AuctionHouseX.getInstance().getFileManager().getPlayerExpiredListings(p);
+
+            clearCurrentAuctionhouse(p);
+
+            int itemSlot = 0;
+            if (sortOrder.equals("oldest")) {
+                for (int i = itemsOnPage; i < listings.size(); i++) {
+                    if (expiredCfg.getString(listings.get(i) + ".seller") != null) {
+                        if (cancelledExpiredGUI.getItem(itemSlot) != null) {
+                            if (itemSlot <= 52) {
+                                itemSlot++;
+                            }
+                        }
+
+                        if (cancelledExpiredGUI.getItem(itemSlot) == null) {
+                            String time = AuctionHouseX.getInstance().getTimeHandler().convertSoldTime(expiredCfg.getLong(listings.get(i) + ".time"));
+                            double price = expiredCfg.getDouble(listings.get(i) + ".price");
+
+                            ItemStack item = expiredCfg.getItemStack(listings.get(i) + ".item");
+                            ItemMeta itemMeta = item.getItemMeta();
+                            List<String> itemLore = new ArrayList<>();
+                            if (itemMeta.hasLore()) {
+                                itemLore = itemMeta.getLore();
+                            }
+                            itemLore.add("§8------------------------------");
+                            itemLore.add(" ");
+                            itemLore.add("§9Price: §e$" + price);
+                            itemLore.add("§9Cancelled/Expired: §e" + time);
+                            itemLore.add(" ");
+                            itemLore.add("§8------------------------------");
+                            itemMeta.setLore(itemLore);
+                            item.setItemMeta(itemMeta);
+                            cancelledExpiredGUI.setItem(itemSlot, item);
+                        }
+
+                        if (itemSlot <= 52) {
+                            itemSlot++;
+                        }
+                    }
+                }
+            } else if (sortOrder.equals("newest")) {
+                for (int i = listings.size() - 1; i > itemsOnPage - 1; i--) {
+                    if (expiredCfg.getString(listings.get(i) + ".seller") != null) {
+                        if (cancelledExpiredGUI.getItem(itemSlot) != null) {
+                            if (itemSlot <= 52) {
+                                itemSlot++;
+                            }
+                        }
+
+                        if (cancelledExpiredGUI.getItem(itemSlot) == null) {
+                            int listing = listings.get(i);
+                            if (page > 1) {
+                                listing = ((listings.size() - 1) - itemsOnPage) - itemSlot;
+                            }
+                            String time = AuctionHouseX.getInstance().getTimeHandler().convertSoldTime(expiredCfg.getLong(listing + ".time"));
+                            double price = expiredCfg.getDouble(listing + ".price");
+
+                            ItemStack item = expiredCfg.getItemStack(listing + ".item");
+                            ItemMeta itemMeta = item.getItemMeta();
+                            List<String> itemLore = new ArrayList<>();
+                            if (itemMeta.hasLore()) {
+                                itemLore = itemMeta.getLore();
+                            }
+                            itemLore.add("§8------------------------------");
+                            itemLore.add(" ");
+                            itemLore.add("§9Price: §e$" + price);
+                            itemLore.add("§9Cancelled/Expired: §e" + time);
+                            itemLore.add(" ");
+                            itemLore.add("§8------------------------------");
+                            itemMeta.setLore(itemLore);
+                            item.setItemMeta(itemMeta);
+                            cancelledExpiredGUI.setItem(itemSlot, item);
+                        }
+
+                        if (itemSlot <= 52) {
+                            itemSlot++;
+                        }
+                    }
+                }
+            } else if (sortOrder.equals("cheapest")) {
+                //> Sort listings (cheapest)
+                Map<Integer, Double> listingPrices = new HashMap<>();
+                for (int listing : listings) {
+                    double price = expiredCfg.getDouble(listing + ".price");
+                    listingPrices.put(listing, price);
+                }
+
+                List<Map.Entry<Integer, Double>> list = new ArrayList<>(listingPrices.entrySet());
+                list.sort(Map.Entry.comparingByValue());
+
+                List<Integer> cheapestListings = new ArrayList<>();
+                for (Map.Entry<Integer, Double> entry : list) {
+                    cheapestListings.add(entry.getKey());
+                }
+
+                for (int i = itemsOnPage; i < cheapestListings.size(); i++) {
+                    if (expiredCfg.getString(cheapestListings.get(i) + ".seller") != null) {
+                        if (cancelledExpiredGUI.getItem(itemSlot) != null) {
+                            if (itemSlot <= 52) {
+                                itemSlot++;
+                            }
+                        }
+
+                        if (cancelledExpiredGUI.getItem(itemSlot) == null) {
+                            int listing = cheapestListings.get(i);
+                            if (page > 1) {
+                                listing = ((cheapestListings.size() - 1) - itemsOnPage) - itemSlot;
+                            }
+                            String time = AuctionHouseX.getInstance().getTimeHandler().convertSoldTime(expiredCfg.getLong(listing + ".time"));
+                            double price = expiredCfg.getDouble(listing + ".price");
+
+                            ItemStack item = expiredCfg.getItemStack(listing + ".item");
+                            ItemMeta itemMeta = item.getItemMeta();
+                            List<String> itemLore = new ArrayList<>();
+                            if (itemMeta.hasLore()) {
+                                itemLore = itemMeta.getLore();
+                            }
+                            itemLore.add("§8------------------------------");
+                            itemLore.add(" ");
+                            itemLore.add("§9Price: §e$" + price);
+                            itemLore.add("§9Cancelled/Expired: §e" + time);
+                            itemLore.add(" ");
+                            itemLore.add("§8------------------------------");
+                            itemMeta.setLore(itemLore);
+                            item.setItemMeta(itemMeta);
+                            cancelledExpiredGUI.setItem(itemSlot, item);
+                        }
+
+                        if (itemSlot <= 52) {
+                            itemSlot++;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -995,6 +1136,9 @@ public class AuctionhouseManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        //> Refresh all open Auctionhouses
+        refreshOpenAuctionhouses();
     }
 
     public void buyListing(Player p, File file, FileConfiguration fileCfg, int id) {
@@ -1020,5 +1164,8 @@ public class AuctionhouseManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        //> Refresh all open Auctionhouses
+        refreshOpenAuctionhouses();
     }
 }

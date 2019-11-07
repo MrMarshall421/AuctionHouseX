@@ -72,7 +72,7 @@ public class AuctionHouseCMD implements CommandExecutor {
                     AuctionHouseX.getInstance().getRecentlySoldGUI().open(p, "newest", 1);
                 } else if (args[0].equalsIgnoreCase("expired")) {
                     //> Show the expired items of a player
-
+                    AuctionHouseX.getInstance().getCancelledExpiredGUI().open(p, "newest", 1);
                 } else if (args[0].equalsIgnoreCase("cancel")) {
                     //> Cancels all auctions of a player
 
