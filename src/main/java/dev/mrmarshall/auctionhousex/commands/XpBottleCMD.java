@@ -50,15 +50,16 @@ public class XpBottleCMD implements CommandExecutor {
                                 try {
                                     int currentExp = AuctionHouseX.getInstance().getLevelManager().getTotalExperience(p);
                                     int level = Integer.parseInt(args[1]);
-                                    int amount = AuctionHouseX.getInstance().getLevelManager().getExpAtLevel(level);
 
-                                    if (currentExp >= amount) {
-                                        AuctionHouseX.getInstance().getLevelManager().setTotalExperience(p, currentExp - amount);
+                                    if (p.getLevel() >= level) {
+                                        p.setLevel(p.getLevel() - level);
+                                        int totalExpBetween = currentExp - AuctionHouseX.getInstance().getLevelManager().getTotalExperience(p);
+
                                         p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
-                                        p.getInventory().addItem(AuctionHouseX.getInstance().getEnchantingBottle().getItem(amount));
-                                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully withdrawn " + amount + " EXP!");
+                                        p.getInventory().addItem(AuctionHouseX.getInstance().getEnchantingBottle().getItem(totalExpBetween));
+                                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully withdrawn " + totalExpBetween + " EXP!");
                                     } else {
-                                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou don't have " + amount + " EXP.");
+                                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYou don't have " + level + " Levels.");
                                     }
                                 } catch (NumberFormatException ex) {
                                     //> Command Help
