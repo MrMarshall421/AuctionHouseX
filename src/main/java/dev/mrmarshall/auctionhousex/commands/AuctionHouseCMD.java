@@ -51,7 +51,7 @@ public class AuctionHouseCMD implements CommandExecutor {
             if (args.length == 0) {
                 //> Open Auctionhouse
                 if (p.hasPermission("auctionhouse.access")) {
-                    AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "Blocks", 1, "newest");
+                    AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "ALL", 1, "newest");
                 } else {
                     p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
                 }

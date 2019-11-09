@@ -127,7 +127,7 @@ public class CurrentListingsGUI implements Listener {
                 } else if (e.getSlot() == 53) {
                     //> Back
                     p.closeInventory();
-                    AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "Blocks", 1, currentSortingOrder);
+                    AuctionHouseX.getInstance().getAuctionhouseGUI().open(p, "ALL", 1, currentSortingOrder);
                 } else {
                     if (e.isShiftClick() && e.isRightClick()) {
                         //> Cancel Listing

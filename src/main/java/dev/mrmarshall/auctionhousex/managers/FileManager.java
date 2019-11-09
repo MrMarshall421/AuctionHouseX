@@ -152,7 +152,9 @@ public class FileManager {
                         }
                     }
 
-                    finalList.put(file.getName(), list);
+                    if (!list.isEmpty()) {
+                        finalList.put(file.getName(), list);
+                    }
                 }
             }
         }
