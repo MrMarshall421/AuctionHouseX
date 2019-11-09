@@ -61,7 +61,7 @@ public class TradingManager {
     }
 
     public void acceptTrade(UUID targetUUID) {
-        ItemStack accept = AuctionHouseX.getInstance().getItemCreator().create(Material.GREEN_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
+        ItemStack accept = AuctionHouseX.getInstance().getItemCreator().create(Material.LIME_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
         Player target = Bukkit.getPlayer(targetUUID);
         Player p = Bukkit.getPlayer(AuctionHouseX.getInstance().getTradingManager().getTradingPartner(targetUUID));
 
@@ -79,7 +79,7 @@ public class TradingManager {
         }
 
         //> Finish trading if both accepted
-        if (target.getOpenInventory().getTopInventory().getItem(48).getType() == Material.GREEN_STAINED_GLASS_PANE && target.getOpenInventory().getTopInventory().getItem(51).getType() == Material.GREEN_STAINED_GLASS_PANE) {
+        if (target.getOpenInventory().getTopInventory().getItem(48).getType() == Material.LIME_STAINED_GLASS_PANE && target.getOpenInventory().getTopInventory().getItem(51).getType() == Material.LIME_STAINED_GLASS_PANE) {
             new BukkitRunnable() {
                 @Override
                 public void run() {

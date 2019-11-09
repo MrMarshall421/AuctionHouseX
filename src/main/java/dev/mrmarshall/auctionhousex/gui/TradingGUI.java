@@ -25,7 +25,7 @@ public class TradingGUI implements Listener {
         ItemStack placeholder = AuctionHouseX.getInstance().getItemCreator().create(Material.LIGHT_BLUE_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
         ItemStack instruction = AuctionHouseX.getInstance().getTradingManager().getInstructionBook();
         ItemStack neutral = AuctionHouseX.getInstance().getItemCreator().create(Material.YELLOW_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
-        ItemStack accept = AuctionHouseX.getInstance().getItemCreator().create(Material.GREEN_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
+        ItemStack accept = AuctionHouseX.getInstance().getItemCreator().create(Material.LIME_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
         ItemStack decline = AuctionHouseX.getInstance().getItemCreator().create(Material.RED_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
 
         //> Skulls
@@ -118,9 +118,9 @@ public class TradingGUI implements Listener {
 
                     if (!e.isCancelled()) {
                         if (e.getCurrentItem() != null) {
-                            if (e.getCurrentItem().getType() == Material.GREEN_STAINED_GLASS_PANE) {
+                            if (e.getCurrentItem().getType() == Material.LIME_STAINED_GLASS_PANE) {
                                 //> Accept Trade
-                                ItemStack accept = AuctionHouseX.getInstance().getItemCreator().create(Material.GREEN_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
+                                ItemStack accept = AuctionHouseX.getInstance().getItemCreator().create(Material.LIME_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
 
                                 e.setCancelled(true);
 

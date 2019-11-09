@@ -17,9 +17,11 @@ C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionho
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\managers\LevelManager.java
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\commands\XpBottleCMD.java
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\events\PlayerInteractEntityListener.java
+C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\gui\CancelledExpiredGUI.java
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\plugin\PluginManager.java
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\util\TimeHandler.java
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\events\ProjectileLaunchListener.java
+C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\gui\RecentlySoldGUI.java
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\gui\TradingGUI.java
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\gui\ListingPriceConfirmationGUI.java
 C:\Users\miste\IdeaProjects\AuctionHouseX\src\main\java\dev\mrmarshall\auctionhousex\managers\AuctionhouseManager.java
