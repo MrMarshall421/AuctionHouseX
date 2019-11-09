@@ -83,227 +83,238 @@ public class TradingManager {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (AuctionHouseX.getInstance().getTradingManager().getTrading().containsKey(targetUUID)) {
-                        if (target.getOpenInventory().getTopInventory().getItem(14) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(14));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(15) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(15));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(16) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(16));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(17) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(17));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(23) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(23));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(24) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(24));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(25) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(25));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(26) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(26));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(32) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(32));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(33) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(33));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(34) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(34));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(35) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(35));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(41) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(41));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(42) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(42));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(43) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(43));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(44) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(44));
-                        }
-                        AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(targetUUID);
-                        AuctionHouseX.getInstance().getTradingManager().getTrading().remove(targetUUID);
-                        AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(targetUUID);
-                        target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aTrading with " + p.getName() + " succeed.");
+                    if (target.getInventory().firstEmpty() != -1 && p.getInventory().firstEmpty() != -1) {
+                        if (AuctionHouseX.getInstance().getTradingManager().getTrading().containsKey(targetUUID)) {
+                            if (target.getOpenInventory().getTopInventory().getItem(14) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(14));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(15) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(15));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(16) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(16));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(17) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(17));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(23) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(23));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(24) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(24));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(25) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(25));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(26) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(26));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(32) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(32));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(33) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(33));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(34) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(34));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(35) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(35));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(41) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(41));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(42) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(42));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(43) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(43));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(44) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(44));
+                            }
+                            AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(targetUUID);
+                            AuctionHouseX.getInstance().getTradingManager().getTrading().remove(targetUUID);
+                            AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(targetUUID);
+                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aTrading with " + p.getName() + " succeed.");
 
-                        if (p.getOpenInventory().getTopInventory().getItem(9) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(9));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(10) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(10));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(11) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(11));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(12) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(12));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(18) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(18));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(19) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(19));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(20) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(20));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(21) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(21));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(27) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(27));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(28) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(28));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(29) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(29));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(30) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(30));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(36) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(36));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(37) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(37));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(38) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(38));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(39) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(39));
-                        }
-                        AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(p.getUniqueId());
-                        AuctionHouseX.getInstance().getTradingManager().getTrading().remove(p.getUniqueId());
-                        AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(p.getUniqueId());
-                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aTrading with " + target.getName() + " succeed.");
+                            if (p.getOpenInventory().getTopInventory().getItem(9) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(9));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(10) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(10));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(11) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(11));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(12) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(12));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(18) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(18));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(19) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(19));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(20) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(20));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(21) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(21));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(27) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(27));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(28) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(28));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(29) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(29));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(30) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(30));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(36) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(36));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(37) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(37));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(38) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(38));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(39) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(39));
+                            }
+                            AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(p.getUniqueId());
+                            AuctionHouseX.getInstance().getTradingManager().getTrading().remove(p.getUniqueId());
+                            AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(p.getUniqueId());
+                            p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aTrading with " + target.getName() + " succeed.");
 
-                        target.closeInventory();
-                        p.closeInventory();
+                            target.closeInventory();
+                            p.closeInventory();
+                        } else {
+                            if (p.getOpenInventory().getTopInventory().getItem(14) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(14));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(15) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(15));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(16) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(16));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(17) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(17));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(23) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(23));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(24) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(24));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(25) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(25));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(26) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(26));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(32) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(32));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(33) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(33));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(34) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(34));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(35) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(35));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(41) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(41));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(42) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(42));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(43) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(43));
+                            }
+                            if (p.getOpenInventory().getTopInventory().getItem(44) != null) {
+                                p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(44));
+                            }
+                            AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(p.getUniqueId());
+                            AuctionHouseX.getInstance().getTradingManager().getTrading().remove(p.getUniqueId());
+                            AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(p.getUniqueId());
+                            p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aTrading with " + target.getName() + " succeed.");
+
+                            if (target.getOpenInventory().getTopInventory().getItem(9) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(9));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(10) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(10));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(11) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(11));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(12) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(12));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(13) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(13));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(18) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(18));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(19) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(19));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(20) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(20));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(21) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(21));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(27) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(27));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(28) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(28));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(29) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(29));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(30) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(30));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(36) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(36));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(37) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(37));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(38) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(38));
+                            }
+                            if (target.getOpenInventory().getTopInventory().getItem(39) != null) {
+                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(39));
+                            }
+                            AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(targetUUID);
+                            AuctionHouseX.getInstance().getTradingManager().getTrading().remove(targetUUID);
+                            AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(targetUUID);
+                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aTrading with " + p.getName() + " succeed.");
+
+                            target.closeInventory();
+                            p.closeInventory();
+                        }
                     } else {
-                        if (p.getOpenInventory().getTopInventory().getItem(14) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(14));
+                        //> Inventory full
+                        if (p.getInventory().firstEmpty() == -1) {
+                            p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYour Inventory is full!");
+                        } else {
+                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cYour Inventory is full!");
                         }
-                        if (p.getOpenInventory().getTopInventory().getItem(15) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(15));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(16) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(16));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(17) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(17));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(23) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(23));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(24) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(24));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(25) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(25));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(26) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(26));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(32) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(32));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(33) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(33));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(34) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(34));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(35) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(35));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(41) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(41));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(42) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(42));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(43) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(43));
-                        }
-                        if (p.getOpenInventory().getTopInventory().getItem(44) != null) {
-                            p.getInventory().addItem(p.getOpenInventory().getTopInventory().getItem(44));
-                        }
-                        AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(p.getUniqueId());
-                        AuctionHouseX.getInstance().getTradingManager().getTrading().remove(p.getUniqueId());
-                        AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(p.getUniqueId());
-                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aTrading with " + target.getName() + " succeed.");
 
-                        if (target.getOpenInventory().getTopInventory().getItem(9) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(9));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(10) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(10));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(11) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(11));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(12) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(12));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(13) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(13));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(18) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(18));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(19) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(19));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(20) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(20));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(21) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(21));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(27) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(27));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(28) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(28));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(29) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(29));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(30) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(30));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(36) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(36));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(37) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(37));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(38) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(38));
-                        }
-                        if (target.getOpenInventory().getTopInventory().getItem(39) != null) {
-                            target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(39));
-                        }
-                        AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(targetUUID);
-                        AuctionHouseX.getInstance().getTradingManager().getTrading().remove(targetUUID);
-                        AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(targetUUID);
-                        target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aTrading with " + p.getName() + " succeed.");
-
-                        target.closeInventory();
-                        p.closeInventory();
+                        AuctionHouseX.getInstance().getTradingManager().cancelTrade(p.getUniqueId(), targetUUID);
                     }
                 }
             }.runTaskLater(AuctionHouseX.getInstance(), 20);

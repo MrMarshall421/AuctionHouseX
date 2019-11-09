@@ -94,44 +94,47 @@ public class CancelledExpiredGUI implements Listener {
     public void onClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
 
-        if (e.getView().getTitle().equals("§6Cancelled/Expired Listings")) {
-            e.setCancelled(true);
+        try {
+            if (e.getView().getTitle().equals("§6Cancelled/Expired Listings")) {
+                e.setCancelled(true);
 
-            String currentSortingOrder = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentSortingOrder(p);
-            int currentPage = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().get(p.getUniqueId());
+                String currentSortingOrder = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentSortingOrder(p);
+                int currentPage = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().get(p.getUniqueId());
 
-            if (e.getSlot() == 8) {
-                //> Next Page
-                if (currentPage <= 9) {
-                    if (e.getInventory().getItem(51) != null && e.getInventory().getItem(51).getType() != Material.AIR) {
-                        open(p, currentSortingOrder, currentPage + 1);
+                if (e.getSlot() == 8) {
+                    //> Next Page
+                    if (currentPage <= 9) {
+                        if (e.getInventory().getItem(51) != null && e.getInventory().getItem(51).getType() != Material.AIR) {
+                            open(p, currentSortingOrder, currentPage + 1);
+                        }
                     }
+                } else if (e.getSlot() == 17) {
+                    //> Previous Page
+                    if (currentPage >= 2) {
+                        open(p, currentSortingOrder, currentPage - 1);
+                    }
+                } else if (e.getSlot() == 26) {
+                    //> Change Sorting Order
+                    if (currentSortingOrder.equals("oldest")) {
+                        //> Change to newest
+                        open(p, "newest", currentPage);
+                    } else if (currentSortingOrder.equals("newest")) {
+                        //> Change to cheapest
+                        open(p, "cheapest", currentPage);
+                    } else {
+                        //> Change to oldest
+                        open(p, "oldest", currentPage);
+                    }
+                } else if (e.getSlot() == 35) {
+                    //> Return all cancelled/expired items
+                    returnCancelledExpired(p, currentPage);
+                } else if (e.getSlot() == 53) {
+                    //> Back
+                    p.closeInventory();
+                    AuctionHouseX.getInstance().getCurrentListingsGUI().open(p, currentSortingOrder, currentPage);
                 }
-            } else if (e.getSlot() == 17) {
-                //> Previous Page
-                if (currentPage >= 2) {
-                    open(p, currentSortingOrder, currentPage - 1);
-                }
-            } else if (e.getSlot() == 26) {
-                //> Change Sorting Order
-                if (currentSortingOrder.equals("oldest")) {
-                    //> Change to newest
-                    open(p, "newest", currentPage);
-                } else if (currentSortingOrder.equals("newest")) {
-                    //> Change to cheapest
-                    open(p, "cheapest", currentPage);
-                } else {
-                    //> Change to oldest
-                    open(p, "oldest", currentPage);
-                }
-            } else if (e.getSlot() == 35) {
-                //> Return all cancelled/expired items
-                returnCancelledExpired(p, currentPage);
-            } else if (e.getSlot() == 53) {
-                //> Back
-                p.closeInventory();
-                AuctionHouseX.getInstance().getCurrentListingsGUI().open(p, currentSortingOrder, currentPage);
             }
+        } catch (NullPointerException ex) {
         }
     }
 

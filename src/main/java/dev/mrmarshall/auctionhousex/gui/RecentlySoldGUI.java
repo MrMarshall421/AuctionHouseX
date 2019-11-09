@@ -93,66 +93,69 @@ public class RecentlySoldGUI implements Listener {
     public void onClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
 
-        if (e.getView().getTitle().equals("§2Recently Sold Items")) {
-            e.setCancelled(true);
+        try {
+            if (e.getView().getTitle().equals("§2Recently Sold Items")) {
+                e.setCancelled(true);
 
-            String currentSortingOrder = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentSortingOrder(p);
-            int currentPage = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().get(p.getUniqueId());
+                String currentSortingOrder = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentSortingOrder(p);
+                int currentPage = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().get(p.getUniqueId());
 
-            if (e.getSlot() == 8) {
-                //> Next Page
-                if (currentPage <= 9) {
-                    if (e.getInventory().getItem(51) != null && e.getInventory().getItem(51).getType() != Material.AIR) {
-                        open(p, currentSortingOrder, currentPage + 1);
+                if (e.getSlot() == 8) {
+                    //> Next Page
+                    if (currentPage <= 9) {
+                        if (e.getInventory().getItem(51) != null && e.getInventory().getItem(51).getType() != Material.AIR) {
+                            open(p, currentSortingOrder, currentPage + 1);
+                        }
                     }
-                }
-            } else if (e.getSlot() == 17) {
-                //> Previous Page
-                if (currentPage >= 2) {
-                    open(p, currentSortingOrder, currentPage - 1);
-                }
-            } else if (e.getSlot() == 26) {
-                //> Change Sorting Order
-                if (currentSortingOrder.equals("oldest")) {
-                    //> Change to newest
-                    open(p, "newest", currentPage);
-                } else if (currentSortingOrder.equals("newest")) {
-                    //> Change to cheapest
-                    open(p, "cheapest", currentPage);
-                } else {
-                    //> Change to oldest
-                    open(p, "oldest", currentPage);
-                }
-            } else if (e.getSlot() == 35) {
-                //> Clear all sold items
-                File sold = new File("plugins/AuctionHouseX/Auctionhouse/Sold.yml");
-                FileConfiguration soldCfg = YamlConfiguration.loadConfiguration(sold);
-
-                Map<String, Object> listings = soldCfg.getValues(false);
-                Iterator iterator = listings.entrySet().iterator();
-
-                while (iterator.hasNext()) {
-                    Map.Entry entry = (Map.Entry) iterator.next();
-                    int listingId = Integer.parseInt(entry.getKey().toString());
-
-                    if (soldCfg.getString(listingId + ".seller").contains(p.getUniqueId().toString())) {
-                        soldCfg.set(listingId + "", null);
+                } else if (e.getSlot() == 17) {
+                    //> Previous Page
+                    if (currentPage >= 2) {
+                        open(p, currentSortingOrder, currentPage - 1);
                     }
-                }
+                } else if (e.getSlot() == 26) {
+                    //> Change Sorting Order
+                    if (currentSortingOrder.equals("oldest")) {
+                        //> Change to newest
+                        open(p, "newest", currentPage);
+                    } else if (currentSortingOrder.equals("newest")) {
+                        //> Change to cheapest
+                        open(p, "cheapest", currentPage);
+                    } else {
+                        //> Change to oldest
+                        open(p, "oldest", currentPage);
+                    }
+                } else if (e.getSlot() == 35) {
+                    //> Clear all sold items
+                    File sold = new File("plugins/AuctionHouseX/Auctionhouse/Sold.yml");
+                    FileConfiguration soldCfg = YamlConfiguration.loadConfiguration(sold);
 
-                try {
-                    soldCfg.save(sold);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                    Map<String, Object> listings = soldCfg.getValues(false);
+                    Iterator iterator = listings.entrySet().iterator();
 
-                AuctionHouseX.getInstance().getAuctionhouseManager().refreshAuctionhouse(p, "", currentPage);
-                p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully cleared sold items!");
-            } else if (e.getSlot() == 53) {
-                //> Back
-                p.closeInventory();
-                AuctionHouseX.getInstance().getCurrentListingsGUI().open(p, currentSortingOrder, currentPage);
+                    while (iterator.hasNext()) {
+                        Map.Entry entry = (Map.Entry) iterator.next();
+                        int listingId = Integer.parseInt(entry.getKey().toString());
+
+                        if (soldCfg.getString(listingId + ".seller").contains(p.getUniqueId().toString())) {
+                            soldCfg.set(listingId + "", null);
+                        }
+                    }
+
+                    try {
+                        soldCfg.save(sold);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    AuctionHouseX.getInstance().getAuctionhouseManager().refreshAuctionhouse(p, "", currentPage);
+                    p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully cleared sold items!");
+                } else if (e.getSlot() == 53) {
+                    //> Back
+                    p.closeInventory();
+                    AuctionHouseX.getInstance().getCurrentListingsGUI().open(p, currentSortingOrder, currentPage);
+                }
             }
+        } catch (NullPointerException ex) {
         }
     }
 }

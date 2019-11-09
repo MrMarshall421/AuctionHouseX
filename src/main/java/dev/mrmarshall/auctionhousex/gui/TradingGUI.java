@@ -98,90 +98,93 @@ public class TradingGUI implements Listener {
         Player p = (Player) e.getWhoClicked();
         Player target = Bukkit.getPlayer(AuctionHouseX.getInstance().getTradingManager().getTradingPartner(p.getUniqueId()));
 
-        //> Safe Trade
-        if (e.getView().getTitle().contains("§2SafeTrade")) {
-            if (!(e.isShiftClick() && e.getClickedInventory() == p.getOpenInventory().getBottomInventory())) {
-                if (e.getClickedInventory().getType() != InventoryType.PLAYER) {
-                    e.setCancelled(true);
+        try {
+            //> Safe Trade
+            if (e.getView().getTitle().contains("§2SafeTrade")) {
+                if (!(e.isShiftClick() && e.getClickedInventory() == p.getOpenInventory().getBottomInventory())) {
+                    if (e.getClickedInventory().getType() != InventoryType.PLAYER) {
+                        e.setCancelled(true);
 
-                    //> Player Trading GUI
-                    if (e.getView().getTitle().equals("§2SafeTrade")) {
-                        if (e.getSlot() == 9 || e.getSlot() == 10 || e.getSlot() == 11 || e.getSlot() == 12 || e.getSlot() == 18 || e.getSlot() == 19 || e.getSlot() == 20 || e.getSlot() == 21 || e.getSlot() == 27 || e.getSlot() == 28 || e.getSlot() == 29 || e.getSlot() == 30 || e.getSlot() == 36 || e.getSlot() == 37 || e.getSlot() == 38 || e.getSlot() == 39 || e.getSlot() == 47 || e.getSlot() == 48) {
-                            e.setCancelled(false);
+                        //> Player Trading GUI
+                        if (e.getView().getTitle().equals("§2SafeTrade")) {
+                            if (e.getSlot() == 9 || e.getSlot() == 10 || e.getSlot() == 11 || e.getSlot() == 12 || e.getSlot() == 18 || e.getSlot() == 19 || e.getSlot() == 20 || e.getSlot() == 21 || e.getSlot() == 27 || e.getSlot() == 28 || e.getSlot() == 29 || e.getSlot() == 30 || e.getSlot() == 36 || e.getSlot() == 37 || e.getSlot() == 38 || e.getSlot() == 39 || e.getSlot() == 47 || e.getSlot() == 48) {
+                                e.setCancelled(false);
+                            }
+                            //> Target Trading GUI
+                        } else if (e.getView().getTitle().equals(" §2SafeTrade")) {
+                            if (e.getSlot() == 14 || e.getSlot() == 15 || e.getSlot() == 16 || e.getSlot() == 17 || e.getSlot() == 23 || e.getSlot() == 24 || e.getSlot() == 25 || e.getSlot() == 26 || e.getSlot() == 32 || e.getSlot() == 33 || e.getSlot() == 34 || e.getSlot() == 35 || e.getSlot() == 41 || e.getSlot() == 42 || e.getSlot() == 43 || e.getSlot() == 44 || e.getSlot() == 50 || e.getSlot() == 51) {
+                                e.setCancelled(false);
+                            }
                         }
-                        //> Target Trading GUI
-                    } else if (e.getView().getTitle().equals(" §2SafeTrade")) {
-                        if (e.getSlot() == 14 || e.getSlot() == 15 || e.getSlot() == 16 || e.getSlot() == 17 || e.getSlot() == 23 || e.getSlot() == 24 || e.getSlot() == 25 || e.getSlot() == 26 || e.getSlot() == 32 || e.getSlot() == 33 || e.getSlot() == 34 || e.getSlot() == 35 || e.getSlot() == 41 || e.getSlot() == 42 || e.getSlot() == 43 || e.getSlot() == 44 || e.getSlot() == 50 || e.getSlot() == 51) {
-                            e.setCancelled(false);
-                        }
-                    }
 
-                    if (!e.isCancelled()) {
-                        if (e.getCurrentItem() != null) {
-                            if (e.getCurrentItem().getType() == Material.LIME_STAINED_GLASS_PANE) {
-                                //> Accept Trade
-                                ItemStack accept = AuctionHouseX.getInstance().getItemCreator().create(Material.LIME_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
+                        if (!e.isCancelled()) {
+                            if (e.getCurrentItem() != null) {
+                                if (e.getCurrentItem().getType() == Material.LIME_STAINED_GLASS_PANE) {
+                                    //> Accept Trade
+                                    ItemStack accept = AuctionHouseX.getInstance().getItemCreator().create(Material.LIME_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
 
-                                e.setCancelled(true);
+                                    e.setCancelled(true);
 
-                                if (AuctionHouseX.getInstance().getTradingManager().getTrading().containsKey(p.getUniqueId())) {
-                                    e.getInventory().setItem(48, accept);
+                                    if (AuctionHouseX.getInstance().getTradingManager().getTrading().containsKey(p.getUniqueId())) {
+                                        e.getInventory().setItem(48, accept);
+                                    } else {
+                                        e.getInventory().setItem(51, accept);
+                                    }
+
+                                    AuctionHouseX.getInstance().getTradingManager().acceptTrade(target.getUniqueId());
+                                } else if (e.getCurrentItem().getType() == Material.RED_STAINED_GLASS_PANE) {
+                                    //> Decline Trade
+                                    ItemStack decline = AuctionHouseX.getInstance().getItemCreator().create(Material.RED_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
+
+                                    e.setCancelled(true);
+
+                                    if (AuctionHouseX.getInstance().getTradingManager().getTrading().containsKey(p.getUniqueId())) {
+                                        e.getInventory().setItem(47, decline);
+                                    } else {
+                                        e.getInventory().setItem(50, decline);
+                                    }
+
+                                    AuctionHouseX.getInstance().getTradingManager().declineTrade(target.getUniqueId());
                                 } else {
-                                    e.getInventory().setItem(51, accept);
-                                }
-
-                                AuctionHouseX.getInstance().getTradingManager().acceptTrade(target.getUniqueId());
-                            } else if (e.getCurrentItem().getType() == Material.RED_STAINED_GLASS_PANE) {
-                                //> Decline Trade
-                                ItemStack decline = AuctionHouseX.getInstance().getItemCreator().create(Material.RED_STAINED_GLASS_PANE, " ", new ArrayList<>(), false);
-
-                                e.setCancelled(true);
-
-                                if (AuctionHouseX.getInstance().getTradingManager().getTrading().containsKey(p.getUniqueId())) {
-                                    e.getInventory().setItem(47, decline);
-                                } else {
-                                    e.getInventory().setItem(50, decline);
-                                }
-
-                                AuctionHouseX.getInstance().getTradingManager().declineTrade(target.getUniqueId());
-                            } else {
-                                //> Synchronize item to other player
-                                if (e.getClickedInventory() == e.getView().getTopInventory()) {
-                                    if (e.getCurrentItem() != null) {
-                                        if (!AuctionHouseX.getInstance().getTradingManager().getBlockTrading().contains(p.getUniqueId())) {
-                                            //> Item removed from Trading Field
-                                            new BukkitRunnable() {
-                                                @Override
-                                                public void run() {
-                                                    target.getOpenInventory().getTopInventory().setItem(e.getSlot(), e.getClickedInventory().getItem(e.getSlot()));
-                                                }
-                                            }.runTaskLater(AuctionHouseX.getInstance(), 5);
-                                        } else {
-                                            e.setCancelled(true);
+                                    //> Synchronize item to other player
+                                    if (e.getClickedInventory() == e.getView().getTopInventory()) {
+                                        if (e.getCurrentItem() != null) {
+                                            if (!AuctionHouseX.getInstance().getTradingManager().getBlockTrading().contains(p.getUniqueId())) {
+                                                //> Item removed from Trading Field
+                                                new BukkitRunnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        target.getOpenInventory().getTopInventory().setItem(e.getSlot(), e.getClickedInventory().getItem(e.getSlot()));
+                                                    }
+                                                }.runTaskLater(AuctionHouseX.getInstance(), 5);
+                                            } else {
+                                                e.setCancelled(true);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        } else {
-                            if (!AuctionHouseX.getInstance().getTradingManager().getBlockTrading().contains(p.getUniqueId())) {
-                                if (e.getCursor() != null && e.getCursor().getType() != Material.AIR) {
-                                    //> New Item added to Trading Field
-                                    new BukkitRunnable() {
-                                        @Override
-                                        public void run() {
-                                            target.getOpenInventory().getTopInventory().setItem(e.getSlot(), e.getClickedInventory().getItem(e.getSlot()));
-                                        }
-                                    }.runTaskLater(AuctionHouseX.getInstance(), 5);
-                                }
                             } else {
-                                e.setCancelled(true);
+                                if (!AuctionHouseX.getInstance().getTradingManager().getBlockTrading().contains(p.getUniqueId())) {
+                                    if (e.getCursor() != null && e.getCursor().getType() != Material.AIR) {
+                                        //> New Item added to Trading Field
+                                        new BukkitRunnable() {
+                                            @Override
+                                            public void run() {
+                                                target.getOpenInventory().getTopInventory().setItem(e.getSlot(), e.getClickedInventory().getItem(e.getSlot()));
+                                            }
+                                        }.runTaskLater(AuctionHouseX.getInstance(), 5);
+                                    }
+                                } else {
+                                    e.setCancelled(true);
+                                }
                             }
                         }
                     }
+                } else {
+                    e.setCancelled(true);
                 }
-            } else {
-                e.setCancelled(true);
             }
+        } catch (NullPointerException ex) {
         }
     }
 }
