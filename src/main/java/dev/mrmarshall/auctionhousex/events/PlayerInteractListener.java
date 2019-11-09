@@ -22,20 +22,27 @@ public class PlayerInteractListener implements Listener {
 
         if (e.getHand() == EquipmentSlot.HAND) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
-                if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§eBottle o' Enchanting")) {
-                    int amount = Integer.valueOf(p.getInventory().getItemInMainHand().getItemMeta().getLore().get(0).replaceAll("§7", "").replaceAll("[^0-9]", ""));
-                    AuctionHouseX.getInstance().getEnchantingBottle().addThrownExpBottle(p.getUniqueId(), amount);
-                } else if (p.getInventory().getItemInMainHand().getType().toString().contains("_SHULKER_BOX") && p.isSneaking()) {
-                    //> Open Shulker Box
-                    BlockStateMeta shulkerBoxMeta = (BlockStateMeta) p.getInventory().getItemInMainHand().getItemMeta();
-                    ShulkerBox shulkerBox = (ShulkerBox) shulkerBoxMeta.getBlockState();
-                    ItemStack[] shulkerBoxContent = shulkerBox.getInventory().getContents();
+                try {
+                    if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§eBottle o' Enchanting")) {
+                        int amount = Integer.valueOf(p.getInventory().getItemInMainHand().getItemMeta().getLore().get(0).replaceAll("§7", "").replaceAll("[^0-9]", ""));
+                        AuctionHouseX.getInstance().getEnchantingBottle().addThrownExpBottle(p.getUniqueId(), amount);
+                    } else if ((p.getInventory().getItemInMainHand().getType().toString().contains("_SHULKER_BOX") || p.getInventory().getItemInMainHand().getType().toString().contains("SHULKER_BOX")) && p.isSneaking()) {
+                        //> Open Shulker Box
+                        if (p.hasPermission("shulkerbox.open")) {
+                            BlockStateMeta shulkerBoxMeta = (BlockStateMeta) p.getInventory().getItemInMainHand().getItemMeta();
+                            ShulkerBox shulkerBox = (ShulkerBox) shulkerBoxMeta.getBlockState();
+                            ItemStack[] shulkerBoxContent = shulkerBox.getInventory().getContents();
 
-                    Inventory shulkerBoxGUI = Bukkit.createInventory(null, 27, "§rShulker Box");
-                    shulkerBoxGUI.setContents(shulkerBoxContent);
+                            Inventory shulkerBoxGUI = Bukkit.createInventory(null, 27, "§rShulker Box");
+                            shulkerBoxGUI.setContents(shulkerBoxContent);
 
-                    p.openInventory(shulkerBoxGUI);
-                    p.playSound(p.getLocation(), Sound.BLOCK_SHULKER_BOX_OPEN, 1.0F, 1.0F);
+                            p.openInventory(shulkerBoxGUI);
+                            p.playSound(p.getLocation(), Sound.BLOCK_SHULKER_BOX_OPEN, 1.0F, 1.0F);
+                        } else {
+                            p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + AuctionHouseX.getInstance().getMessage().noPermission);
+                        }
+                    }
+                } catch (NullPointerException ex) {
                 }
             }
         }
