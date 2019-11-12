@@ -216,15 +216,17 @@ public class AuctionhouseGUI implements Listener {
 
                                                     if (seller != p.getName()) {
                                                         if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                                            // TODO: SALES TAXES
+                                                            double saleTaxPercentage = Double.parseDouble(AuctionHouseX.getInstance().getConfig().getString("auction.salesTax").replaceAll("[^\\d.]", ""));
+                                                            double finalTax = (saleTaxPercentage / 100.0) * price;
+
                                                             AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), price);
                                                             p.closeInventory();
                                                             p.getInventory().addItem(categoryFileCfg.getItemStack(listings.get(i) + ".item"));
                                                             p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
-                                                            AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listings.get(i) + ".seller"))), price);
+                                                            AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listings.get(i) + ".seller"))), price - finalTax);
 
                                                             if (target != null && target.isOnline()) {
-                                                                target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                                target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + (price - finalTax) + "$ §a!");
                                                             }
 
                                                             AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, listings.get(i));
@@ -274,15 +276,17 @@ public class AuctionhouseGUI implements Listener {
 
                                                     if (seller != p.getName()) {
                                                         if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                                            // TODO: SALES TAXES
+                                                            double saleTaxPercentage = Double.parseDouble(AuctionHouseX.getInstance().getConfig().getString("auction.salesTax").replaceAll("[^\\d.]", ""));
+                                                            double finalTax = (saleTaxPercentage / 100.0) * price;
+
                                                             AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), price);
                                                             p.closeInventory();
                                                             p.getInventory().addItem(categoryFileCfg.getItemStack(listing + ".item"));
                                                             p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
-                                                            AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))), price);
+                                                            AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))), price - finalTax);
 
                                                             if (target != null && target.isOnline()) {
-                                                                target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                                target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + (price - finalTax) + "$ §a!");
                                                             }
 
                                                             AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, listing);
@@ -347,15 +351,17 @@ public class AuctionhouseGUI implements Listener {
 
                                                     if (seller != p.getName()) {
                                                         if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                                            // TODO: SALES TAXES
+                                                            double saleTaxPercentage = Double.parseDouble(AuctionHouseX.getInstance().getConfig().getString("auction.salesTax").replaceAll("[^\\d.]", ""));
+                                                            double finalTax = (saleTaxPercentage / 100.0) * price;
+
                                                             AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), price);
                                                             p.closeInventory();
                                                             p.getInventory().addItem(categoryFileCfg.getItemStack(listing + ".item"));
                                                             p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
-                                                            AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))), price);
+                                                            AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg.getString(listing + ".seller"))), price - finalTax);
 
                                                             if (target != null && target.isOnline()) {
-                                                                target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                                target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + (price - finalTax) + "$ §a!");
                                                             }
 
                                                             AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile, categoryFileCfg, listing);
@@ -442,15 +448,17 @@ public class AuctionhouseGUI implements Listener {
 
                                                 if (seller != p.getName()) {
                                                     if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                                        // TODO: SALES TAXES
+                                                        double saleTaxPercentage = Double.parseDouble(AuctionHouseX.getInstance().getConfig().getString("auction.salesTax").replaceAll("[^\\d.]", ""));
+                                                        double finalTax = (saleTaxPercentage / 100.0) * price;
+
                                                         AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), price);
                                                         p.closeInventory();
                                                         p.getInventory().addItem(categoryFileCfg2.getItemStack(listing + ".item"));
                                                         p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
-                                                        AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg2.getString(listing + ".seller"))), price);
+                                                        AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg2.getString(listing + ".seller"))), price - finalTax);
 
                                                         if (target != null && target.isOnline()) {
-                                                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + (price - finalTax) + "$ §a!");
                                                         }
 
                                                         AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile2, categoryFileCfg2, listing);
@@ -524,15 +532,17 @@ public class AuctionhouseGUI implements Listener {
 
                                                 if (seller != p.getName()) {
                                                     if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                                        // TODO: SALES TAXES
+                                                        double saleTaxPercentage = Double.parseDouble(AuctionHouseX.getInstance().getConfig().getString("auction.salesTax").replaceAll("[^\\d.]", ""));
+                                                        double finalTax = (saleTaxPercentage / 100.0) * price;
+
                                                         AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), price);
                                                         p.closeInventory();
                                                         p.getInventory().addItem(categoryFileCfg2.getItemStack(listing + ".item"));
                                                         p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
-                                                        AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg2.getString(listing + ".seller"))), price);
+                                                        AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg2.getString(listing + ".seller"))), price - finalTax);
 
                                                         if (target != null && target.isOnline()) {
-                                                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + (price - finalTax) + "$ §a!");
                                                         }
 
                                                         AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile2, categoryFileCfg2, listing);
@@ -605,15 +615,17 @@ public class AuctionhouseGUI implements Listener {
 
                                                 if (seller != p.getName()) {
                                                     if (AuctionHouseX.getInstance().getEconomyManager().getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                                                        // TODO: SALES TAXES
+                                                        double saleTaxPercentage = Double.parseDouble(AuctionHouseX.getInstance().getConfig().getString("auction.salesTax").replaceAll("[^\\d.]", ""));
+                                                        double finalTax = (saleTaxPercentage / 100.0) * price;
+
                                                         AuctionHouseX.getInstance().getEconomyManager().withdrawPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()), price);
                                                         p.closeInventory();
                                                         p.getInventory().addItem(categoryFileCfg2.getItemStack(listing + ".item"));
                                                         p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§aSuccessfully bought an item from " + seller + "!");
-                                                        AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg2.getString(listing + ".seller"))), price);
+                                                        AuctionHouseX.getInstance().getEconomyManager().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(categoryFileCfg2.getString(listing + ".seller"))), price - finalTax);
 
                                                         if (target != null && target.isOnline()) {
-                                                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + price + "$ §a!");
+                                                            target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§a" + p.getName() + " bought an item from you! You got §e" + (price - finalTax) + "$ §a!");
                                                         }
 
                                                         AuctionHouseX.getInstance().getAuctionhouseManager().buyListing(p, categoryFile2, categoryFileCfg2, listing);
