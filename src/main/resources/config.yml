@@ -5,9 +5,7 @@ auction:
   listingRate: 0.0
   listingDuration: "7d 0h 0m"
   expiredDuration: "14d 0h 0m"
-  unclaimedDuration: "90d 0h 0m"
   cleanupDuration: "0d 24h 0m"
-  soldDuration: "365d 0h 0m"
   preventCreative: true
   preventSpectator: true
   maxSellPrice: 1000000.00
