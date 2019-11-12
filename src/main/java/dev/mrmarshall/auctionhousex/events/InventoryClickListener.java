@@ -18,7 +18,7 @@ public class InventoryClickListener implements Listener {
                 e.setCancelled(true);
             }
 
-            if (e.getCurrentItem().getType().toString().contains("_SHULKER_BOX")) {
+            if (e.getCurrentItem().getType().toString().contains("_SHULKER_BOX") || e.getCurrentItem().getType().toString().contains("SHULKER_BOX")) {
                 e.setCancelled(true);
             }
         }

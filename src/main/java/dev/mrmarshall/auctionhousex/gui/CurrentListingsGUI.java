@@ -22,7 +22,7 @@ import java.util.*;
 public class CurrentListingsGUI implements Listener {
 
     public void open(Player p, String sortOrder, int page) {
-        Inventory currentListingsGUI = Bukkit.createInventory(null, 54, "§bYour Current Listings");
+        Inventory currentListingsGUI = Bukkit.createInventory(null, 54, "§3Your Current Listings");
 
         //> Items
         ItemStack back = AuctionHouseX.getInstance().getItemCreator().create(Material.IRON_DOOR, "§9Back", new ArrayList<>(), false);
@@ -73,7 +73,7 @@ public class CurrentListingsGUI implements Listener {
         AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentPage().put(p.getUniqueId(), page);
 
         //> Open GUI
-        if (!p.getOpenInventory().getTitle().equals("§bYour Current Listings")) {
+        if (!p.getOpenInventory().getTitle().equals("§3Your Current Listings")) {
             p.openInventory(currentListingsGUI);
         } else {
             //> Change sorting items
@@ -88,7 +88,7 @@ public class CurrentListingsGUI implements Listener {
         Player p = (Player) e.getWhoClicked();
 
         try {
-            if (e.getView().getTitle().equals("§bYour Current Listings")) {
+            if (e.getView().getTitle().equals("§3Your Current Listings")) {
                 e.setCancelled(true);
 
                 String currentSortingOrder = AuctionHouseX.getInstance().getAuctionhouseManager().getCurrentSortingOrder(p);
