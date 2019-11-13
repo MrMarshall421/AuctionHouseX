@@ -19,6 +19,7 @@ public class TradingManager {
     private List<UUID> blockTrading;
     private Map<UUID, UUID> trading;
     private Map<UUID, Inventory> inventoryCache;
+    private Map<UUID, ItemStack[]> armorCache;
 
     private File instruction;
     private FileConfiguration instructionCfg;
@@ -29,6 +30,7 @@ public class TradingManager {
         loadTradingFiles();
 
         inventoryCache = new HashMap<>();
+        armorCache = new HashMap<>();
         trading = new HashMap<>();
         blockTrading = new ArrayList<>();
     }
@@ -356,6 +358,16 @@ public class TradingManager {
             cacheInventory.setItem(i, p.getInventory().getItem(i));
         }
 
+        ItemStack[] armor = new ItemStack[4];
+        try {
+            armor[0] = p.getInventory().getBoots().clone();
+            armor[1] = p.getInventory().getLeggings().clone();
+            armor[2] = p.getInventory().getChestplate().clone();
+            armor[3] = p.getInventory().getHelmet().clone();
+        } catch (NullPointerException ex) {
+        }
+
+        AuctionHouseX.getInstance().getTradingManager().getArmorCache().put(pUUID, armor);
         AuctionHouseX.getInstance().getTradingManager().getInventoryCache().put(pUUID, cacheInventory);
     }
 
@@ -364,9 +376,11 @@ public class TradingManager {
 
         if (AuctionHouseX.getInstance().getTradingManager().getInventoryCache().containsKey(pUUID)) {
             p.getInventory().setContents(AuctionHouseX.getInstance().getTradingManager().getInventoryCache().get(pUUID).getContents());
+            p.getInventory().setArmorContents(AuctionHouseX.getInstance().getTradingManager().getArmorCache().get(pUUID));
             p.updateInventory();
 
             AuctionHouseX.getInstance().getTradingManager().getInventoryCache().remove(pUUID);
+            AuctionHouseX.getInstance().getTradingManager().getArmorCache().remove(pUUID);
         }
     }
 
@@ -380,16 +394,22 @@ public class TradingManager {
                 try {
                     AuctionHouseX.getInstance().getTradingManager().restoreInventory(pUUID);
                     AuctionHouseX.getInstance().getTradingManager().getTrading().remove(pUUID);
-                    AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(pUUID);
                     p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cTrading with " + target.getName() + " cancelled.");
 
                     AuctionHouseX.getInstance().getTradingManager().restoreInventory(targetUUID);
                     AuctionHouseX.getInstance().getTradingManager().getTrading().remove(targetUUID);
-                    AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(targetUUID);
                     target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cTrading with " + p.getName() + " cancelled.");
 
                     p.closeInventory();
                     target.closeInventory();
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(pUUID);
+                            AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(targetUUID);
+                        }
+                    }.runTaskLater(AuctionHouseX.getInstance(), 20);
                 } catch (NullPointerException ex) {
                     ex.printStackTrace();
                 }
@@ -421,5 +441,9 @@ public class TradingManager {
 
     public Map<UUID, UUID> getTrading() {
         return trading;
+    }
+
+    public Map<UUID, ItemStack[]> getArmorCache() {
+        return armorCache;
     }
 }

@@ -29,7 +29,7 @@ public class Message {
             item = item.replace("%item%", b.getName().getText());
             item = item.replace("%amount%", String.valueOf(b.getCount()));
 
-            originalMessage = originalMessage.replaceFirst(Pattern.quote("*item"), item);
+            originalMessage = originalMessage.replaceAll(Pattern.quote("*item"), item);
             d = new ChatComponentText(originalMessage);
 
             ChatModifier g = d.getChatModifier();

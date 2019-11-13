@@ -4,12 +4,14 @@ dev\mrmarshall\auctionhousex\sorting\SortListingByTime.class
 dev\mrmarshall\auctionhousex\managers\TradingManager$1.class
 dev\mrmarshall\auctionhousex\managers\TradingManager$3.class
 dev\mrmarshall\auctionhousex\gui\TradingGUI$1.class
+dev\mrmarshall\auctionhousex\events\PlayerDropItemListener.class
 dev\mrmarshall\auctionhousex\events\ProjectileLaunchListener.class
 dev\mrmarshall\auctionhousex\events\PlayerQuitListener.class
 dev\mrmarshall\auctionhousex\commands\XpBottleCMD.class
 dev\mrmarshall\auctionhousex\events\PlayerInteractEntityListener.class
 dev\mrmarshall\auctionhousex\items\EnchantingBottle.class
 dev\mrmarshall\auctionhousex\managers\TradingManager.class
+dev\mrmarshall\auctionhousex\managers\TradingManager$3$1.class
 dev\mrmarshall\auctionhousex\plugin\PluginManager.class
 dev\mrmarshall\auctionhousex\events\ExpBottleListener.class
 dev\mrmarshall\auctionhousex\managers\LevelManager.class
