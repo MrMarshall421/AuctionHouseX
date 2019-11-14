@@ -388,33 +388,35 @@ public class TradingManager {
         Player p = Bukkit.getPlayer(pUUID);
         Player target = Bukkit.getPlayer(targetUUID);
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    AuctionHouseX.getInstance().getTradingManager().restoreInventory(pUUID);
-                    AuctionHouseX.getInstance().getTradingManager().getTrading().remove(pUUID);
-                    p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cTrading with " + target.getName() + " cancelled.");
+        if (AuctionHouseX.getInstance().getTradingManager().getTrading().containsKey(pUUID)) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    try {
+                        AuctionHouseX.getInstance().getTradingManager().restoreInventory(pUUID);
+                        AuctionHouseX.getInstance().getTradingManager().getTrading().remove(pUUID);
+                        p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cTrading with " + target.getName() + " cancelled.");
 
-                    AuctionHouseX.getInstance().getTradingManager().restoreInventory(targetUUID);
-                    AuctionHouseX.getInstance().getTradingManager().getTrading().remove(targetUUID);
-                    target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cTrading with " + p.getName() + " cancelled.");
+                        AuctionHouseX.getInstance().getTradingManager().restoreInventory(targetUUID);
+                        AuctionHouseX.getInstance().getTradingManager().getTrading().remove(targetUUID);
+                        target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cTrading with " + p.getName() + " cancelled.");
 
-                    p.closeInventory();
-                    target.closeInventory();
+                        p.closeInventory();
+                        target.closeInventory();
 
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(pUUID);
-                            AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(targetUUID);
-                        }
-                    }.runTaskLater(AuctionHouseX.getInstance(), 20);
-                } catch (NullPointerException ex) {
-                    ex.printStackTrace();
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(pUUID);
+                                AuctionHouseX.getInstance().getTradingManager().getBlockTrading().remove(targetUUID);
+                            }
+                        }.runTaskLater(AuctionHouseX.getInstance(), 20);
+                    } catch (NullPointerException ex) {
+                        ex.printStackTrace();
+                    }
                 }
-            }
-        }.runTaskLater(AuctionHouseX.getInstance(), 20);
+            }.runTaskLater(AuctionHouseX.getInstance(), 20);
+        }
     }
 
     public UUID getTradingPartner(UUID target) {
