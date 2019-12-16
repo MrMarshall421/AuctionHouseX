@@ -261,9 +261,6 @@ public class TradingManager {
                             if (target.getOpenInventory().getTopInventory().getItem(12) != null) {
                                 target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(12));
                             }
-                            if (target.getOpenInventory().getTopInventory().getItem(13) != null) {
-                                target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(13));
-                            }
                             if (target.getOpenInventory().getTopInventory().getItem(18) != null) {
                                 target.getInventory().addItem(target.getOpenInventory().getTopInventory().getItem(18));
                             }
@@ -396,10 +393,12 @@ public class TradingManager {
                         AuctionHouseX.getInstance().getTradingManager().restoreInventory(pUUID);
                         AuctionHouseX.getInstance().getTradingManager().getTrading().remove(pUUID);
                         p.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cTrading with " + target.getName() + " cancelled.");
+                        p.getOpenInventory().getCursor().setAmount(0);
 
                         AuctionHouseX.getInstance().getTradingManager().restoreInventory(targetUUID);
                         AuctionHouseX.getInstance().getTradingManager().getTrading().remove(targetUUID);
                         target.sendMessage(AuctionHouseX.getInstance().getMessage().prefix + "§cTrading with " + p.getName() + " cancelled.");
+                        target.getOpenInventory().getCursor().setAmount(0);
 
                         p.closeInventory();
                         target.closeInventory();
